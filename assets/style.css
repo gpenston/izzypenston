@@ -197,11 +197,13 @@ img {
 .section h2 {
   font-size: 26px;
   margin-bottom: 20px;
+  max-width: 68ch;
 }
 
 .section p {
   color: var(--text-secondary);
   line-height: 1.8;
+  max-width: 68ch;
   margin-bottom: 16px;
 }
 
@@ -251,6 +253,7 @@ img {
   border-left: 3px solid var(--orange);
   padding: 8px 0 8px 24px;
   margin: 28px 0;
+  max-width: 68ch;
 }
 
 .pull-quote p {
@@ -666,6 +669,17 @@ img {
   color: var(--text-secondary);
   line-height: 1.7;
   margin-bottom: 12px;
+}
+
+/* Full-width prose overrides — these live inside cards/grids so should not be capped */
+.donate-card p,
+.memory-text,
+.fa-section p,
+.gallery-footer,
+.modal-subtitle,
+.form-hint,
+.form-note {
+  max-width: none;
 }
 
 /* ===== Footer ===== */
