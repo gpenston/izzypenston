@@ -34,4 +34,24 @@
       nav.classList.toggle('is-scrolled', window.scrollY > 10);
     }, { passive: true });
   }
+
+  // Parallax scroll effect
+  var parallaxEls = document.querySelectorAll('.parallax-img');
+  if (parallaxEls.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    function updateParallax() {
+      var viewH = window.innerHeight;
+      parallaxEls.forEach(function (img) {
+        var rect = img.parentElement.getBoundingClientRect();
+        if (rect.bottom > 0 && rect.top < viewH) {
+          var progress = (rect.top + rect.height) / (viewH + rect.height);
+          var offset = (progress - 0.5) * -100;
+          img.style.transform = 'translateY(' + offset + 'px)';
+        }
+      });
+    }
+    window.addEventListener('scroll', function () {
+      requestAnimationFrame(updateParallax);
+    }, { passive: true });
+    updateParallax();
+  }
 }());

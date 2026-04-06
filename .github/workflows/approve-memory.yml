@@ -1,0 +1,111 @@
+name: Publish Approved Memory
+
+on:
+  issues:
+    types: [labeled]
+
+concurrency:
+  group: approve-memory
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event.label.name == 'approved' && contains(github.event.issue.labels.*.name, 'memory')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Parse issue and update memories.json
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            // Parse issue body
+            const body = context.payload.issue.body || '';
+            const nameMatch = body.match(/\*\*Name:\*\*\s*(.+)/);
+            const relationMatch = body.match(/\*\*Relation:\*\*\s*(.+)/);
+
+            // Memory text: everything between the blank line after metadata and the --- separator
+            const lines = body.split('\n');
+            let memoryLines = [];
+            let inMemory = false;
+            for (const line of lines) {
+              if (line.startsWith('---')) break;
+              if (inMemory) {
+                memoryLines.push(line);
+              }
+              // Start capturing after the last ** metadata line
+              if (line.startsWith('**Relation:**') || (!relationMatch && line.startsWith('**Name:**'))) {
+                inMemory = true;
+              }
+            }
+            const memoryText = memoryLines.join('\n').trim();
+
+            if (!nameMatch || !memoryText) {
+              core.setFailed('Could not parse name or memory text from issue body');
+              return;
+            }
+
+            const name = nameMatch[1].trim();
+            const relation = relationMatch ? relationMatch[1].trim() : '';
+
+            // Read existing memories
+            const memoriesPath = 'assets/memories.json';
+            const memories = JSON.parse(fs.readFileSync(memoriesPath, 'utf8'));
+
+            // Prepend new memory (newest first)
+            const newMemory = { name, relation, text: memoryText };
+            memories.unshift(newMemory);
+
+            // Write back
+            fs.writeFileSync(memoriesPath, JSON.stringify(memories, null, 2) + '\n');
+
+            // Set outputs for commit message
+            core.exportVariable('MEMORY_NAME', name);
+            core.exportVariable('ISSUE_NUMBER', context.payload.issue.number);
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/memories.json
+          git commit -m "Add memory from ${MEMORY_NAME}"
+          git push
+
+      - name: Close issue with comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumber = context.payload.issue.number;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body: 'Memory approved and published to [izzypenston.com](https://izzypenston.com/#memories).'
+            });
+
+            // Remove pending label
+            try {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                name: 'pending'
+              });
+            } catch (e) {
+              // Label may not exist, that's fine
+            }
+
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              state: 'closed'
+            });

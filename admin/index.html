@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Izzy Penston — Memory Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Albert+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange: #B34D18;
+      --blue: #2D6494;
+      --green: #2D8A4E;
+      --red: #CF222E;
+      --bg: #FAF7F2;
+      --bg-secondary: #F0EBE3;
+      --text-primary: #1E1B18;
+      --text-secondary: #6B6560;
+      --text-tertiary: #6E6966;
+      --border: #E0DBD4;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --orange: #E07A3A;
+        --blue: #5A9BD5;
+        --green: #3FB96A;
+        --red: #F85149;
+        --bg: #141210;
+        --bg-secondary: #1E1B18;
+        --text-primary: #F2EDE6;
+        --text-secondary: #A39E98;
+        --text-tertiary: #908B85;
+        --border: #2A2520;
+      }
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Albert Sans', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .header h1 span { color: var(--orange); }
+
+    .badge {
+      background: var(--orange);
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 12px;
+    }
+
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    /* --- PIN Screen --- */
+    .pin-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      text-align: center;
+    }
+
+    .pin-screen h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .pin-screen p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .pin-input {
+      font-family: 'Albert Sans', sans-serif;
+      font-size: 24px;
+      text-align: center;
+      letter-spacing: 0.3em;
+      width: 180px;
+      padding: 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    .pin-input:focus {
+      outline: 2px solid var(--orange);
+      outline-offset: 2px;
+      border-color: var(--orange);
+    }
+
+    .pin-error {
+      color: var(--red);
+      font-size: 14px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .pin-btn {
+      background: var(--orange);
+      color: white;
+      font-family: 'Albert Sans', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 12px 32px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    /* --- Memory Cards --- */
+    .empty {
+      text-align: center;
+      color: var(--text-tertiary);
+      padding: 80px 0;
+    }
+
+    .empty h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 20px;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+    }
+
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .card-name {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 17px;
+      margin-bottom: 2px;
+    }
+
+    .card-relation {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      margin-bottom: 12px;
+    }
+
+    .card-text {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 16px;
+      white-space: pre-wrap;
+    }
+
+    .card-date {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-bottom: 16px;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      flex: 1;
+      font-family: 'Albert Sans', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-approve {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-dismiss {
+      background: transparent;
+      border: 1.5px solid var(--red);
+      color: var(--red);
+    }
+
+    .status-msg {
+      text-align: center;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 10px;
+      margin-bottom: 16px;
+    }
+
+    .status-msg.success { background: #E6F4EA; color: var(--green); }
+    .status-msg.error { background: #FDECEA; color: var(--red); }
+
+    @media (prefers-color-scheme: dark) {
+      .status-msg.success { background: #1a2e1e; }
+      .status-msg.error { background: #2e1a1a; }
+      .pin-btn { color: #1E1B18; }
+    }
+
+    .loading {
+      text-align: center;
+      color: var(--text-tertiary);
+      padding: 60px 0;
+    }
+
+    .refresh-btn {
+      display: block;
+      margin: 0 auto 24px;
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--text-secondary);
+      font-family: 'Albert Sans', sans-serif;
+      font-size: 14px;
+      padding: 8px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Izzy<span>.</span> Admin</h1>
+    <span class="badge" id="badge" style="display:none">0</span>
+  </div>
+
+  <div class="container">
+    <!-- PIN Screen -->
+    <div id="pin-screen" class="pin-screen">
+      <h2>Memory Admin</h2>
+      <p>Enter PIN to review submitted memories.</p>
+      <div class="pin-error" id="pin-error">Incorrect PIN. Try again.</div>
+      <input type="password" class="pin-input" id="pin-input" maxlength="10" inputmode="numeric" autocomplete="off" placeholder="PIN">
+      <br>
+      <button class="pin-btn" id="pin-btn" type="button">Enter</button>
+    </div>
+
+    <!-- Main Screen -->
+    <div id="main-screen" style="display:none">
+      <button class="refresh-btn" id="refresh-btn" type="button">Refresh</button>
+      <div id="status"></div>
+      <div id="cards"></div>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    var API_BASE = '/api/admin';
+    var pin = localStorage.getItem('admin_pin') || '';
+
+    var pinScreen = document.getElementById('pin-screen');
+    var mainScreen = document.getElementById('main-screen');
+    var pinInput = document.getElementById('pin-input');
+    var pinBtn = document.getElementById('pin-btn');
+    var pinError = document.getElementById('pin-error');
+    var badge = document.getElementById('badge');
+    var cards = document.getElementById('cards');
+    var status = document.getElementById('status');
+    var refreshBtn = document.getElementById('refresh-btn');
+
+    function showStatus(msg, type) {
+      status.innerHTML = '<div class="status-msg ' + type + '">' + msg + '</div>';
+      setTimeout(function () { status.innerHTML = ''; }, 4000);
+    }
+
+    function formatDate(iso) {
+      var d = new Date(iso);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function adminFetch(path, method) {
+      return fetch(API_BASE + path, {
+        method: method || 'GET',
+        headers: { 'X-Admin-Pin': pin }
+      }).then(function (r) {
+        if (r.status === 401) {
+          localStorage.removeItem('admin_pin');
+          pin = '';
+          pinScreen.style.display = '';
+          mainScreen.style.display = 'none';
+          pinError.style.display = 'block';
+          pinError.textContent = 'Session expired. Enter PIN again.';
+          throw new Error('Unauthorized');
+        }
+        return r.json();
+      });
+    }
+
+    function loadMemories() {
+      cards.innerHTML = '<div class="loading">Loading memories&hellip;</div>';
+
+      adminFetch('/pending').then(function (data) {
+        if (!data.ok) {
+          cards.innerHTML = '<div class="empty"><h2>Error</h2><p>Could not load memories.</p></div>';
+          return;
+        }
+
+        var memories = data.memories;
+        badge.textContent = memories.length;
+        badge.style.display = memories.length > 0 ? '' : 'none';
+
+        if (memories.length === 0) {
+          cards.innerHTML = '<div class="empty"><h2>All caught up</h2><p>No pending memories to review.</p></div>';
+          return;
+        }
+
+        var html = '';
+        for (var i = 0; i < memories.length; i++) {
+          var m = memories[i];
+          html += '<div class="card" id="card-' + m.id + '">';
+          html += '<div class="card-name">' + escHtml(m.name) + '</div>';
+          if (m.relation) {
+            html += '<div class="card-relation">' + escHtml(m.relation) + '</div>';
+          }
+          html += '<div class="card-text">' + escHtml(m.text) + '</div>';
+          html += '<div class="card-date">' + formatDate(m.date) + '</div>';
+          html += '<div class="card-actions">';
+          html += '<button class="btn btn-approve" data-id="' + m.id + '" data-action="approve">Approve</button>';
+          html += '<button class="btn btn-dismiss" data-id="' + m.id + '" data-action="reject">Dismiss</button>';
+          html += '</div></div>';
+        }
+        cards.innerHTML = html;
+      }).catch(function (err) {
+        if (err.message !== 'Unauthorized') {
+          cards.innerHTML = '<div class="empty"><h2>Error</h2><p>Could not load memories.</p></div>';
+        }
+      });
+    }
+
+    function escHtml(str) {
+      var div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function handleAction(id, action) {
+      var card = document.getElementById('card-' + id);
+      var btns = card.querySelectorAll('.btn');
+      btns.forEach(function (b) { b.disabled = true; });
+
+      adminFetch('/' + action + '/' + id, 'POST').then(function (data) {
+        if (data.ok) {
+          card.style.opacity = '0.4';
+          card.style.transition = 'opacity 0.3s';
+          setTimeout(function () {
+            card.remove();
+            var remaining = cards.querySelectorAll('.card').length;
+            badge.textContent = remaining;
+            if (remaining === 0) {
+              badge.style.display = 'none';
+              cards.innerHTML = '<div class="empty"><h2>All caught up</h2><p>No pending memories to review.</p></div>';
+            }
+          }, 300);
+          showStatus(action === 'approve' ? 'Memory approved — it will appear on the site shortly.' : 'Memory dismissed.', 'success');
+        } else {
+          showStatus('Something went wrong. Try again.', 'error');
+          btns.forEach(function (b) { b.disabled = false; });
+        }
+      }).catch(function () {
+        showStatus('Something went wrong. Try again.', 'error');
+        btns.forEach(function (b) { b.disabled = false; });
+      });
+    }
+
+    // Event delegation for approve/dismiss buttons
+    cards.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-action]');
+      if (!btn || btn.disabled) return;
+      handleAction(btn.dataset.id, btn.dataset.action);
+    });
+
+    // PIN entry
+    function tryPin() {
+      var val = pinInput.value.trim();
+      if (!val) return;
+      pin = val;
+      localStorage.setItem('admin_pin', pin);
+      pinScreen.style.display = 'none';
+      mainScreen.style.display = '';
+      pinError.style.display = 'none';
+      loadMemories();
+    }
+
+    pinBtn.addEventListener('click', tryPin);
+    pinInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') tryPin();
+    });
+
+    refreshBtn.addEventListener('click', loadMemories);
+
+    // Auto-start if PIN is saved
+    if (pin) {
+      pinScreen.style.display = 'none';
+      mainScreen.style.display = '';
+      loadMemories();
+    }
+  }());
+  </script>
+</body>
+</html>

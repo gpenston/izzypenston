@@ -81,6 +81,17 @@ a {
 
 a:hover { color: var(--blue-hover); }
 
+.section p a, .fa-section a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1.5px;
+  font-weight: 500;
+}
+
+.section p a:hover, .fa-section a:hover {
+  text-decoration-thickness: 2.5px;
+}
+
 ::selection {
   background: var(--orange);
   color: white;
@@ -248,9 +259,44 @@ img {
   color: white;
 }
 
+/* ===== Parallax Story Breaks ===== */
+.parallax-break {
+  width: 100vw;
+  height: 360px;
+  overflow: hidden;
+  margin: 48px 0;
+  position: relative;
+  left: 50%;
+  margin-left: -50vw;
+}
+
+.parallax-img {
+  width: 100%;
+  height: 150%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  will-change: transform;
+}
+
+@media (max-width: 600px) {
+  .parallax-break {
+    height: 260px;
+    margin: 32px 0;
+    margin-left: -50vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .parallax-img {
+    height: 100%;
+    transform: none !important;
+  }
+}
+
 /* ===== Pull Quote ===== */
 .pull-quote {
-  border-left: 3px solid var(--orange);
+  border-left: 3px solid var(--blue);
   padding: 8px 0 8px 24px;
   margin: 28px 0;
   max-width: 68ch;

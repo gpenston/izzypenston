@@ -60,7 +60,7 @@
 
       <section class="hero">
         <div class="hero-inner">
-          <div class="hero-photo-placeholder" data-stagger="0" aria-hidden="true"></div>
+          <img src="/assets/photos/hero-izzy-maeve.jpg" alt="Izzy smiling with Maeve, their Canine Companions service dog, on their lap" class="hero-photo" data-stagger="0">
           <div class="hero-text">
             <div class="hero-label" data-stagger="1">Remembering Izzy</div>
             <h1 data-stagger="2">Isabel Grace<br>&ldquo;Izzy&rdquo; Penston</h1>
@@ -76,7 +76,11 @@
 
         <p data-reveal>Born in San Francisco on a November morning in 2000, Izzy was brilliant and curious from the very start. By age five, they were already reading voraciously and could name every dinosaur that ever walked the earth. After a couple of years in Pittsburg, the Penston family settled in Alameda in 2003 &mdash; the place Izzy would call home for the rest of their life.</p>
 
-        <p data-reveal>While in preschool, a different kind of difference emerged. Coordination challenges, balance issues, and a heart condition were pieces of a puzzle that finally came together around age nine with a diagnosis of Friedreich&rsquo;s Ataxia &mdash; a rare, progressive neurodegenerative disease that would shape Izzy&rsquo;s journey but never define who they were.</p>
+        <p data-reveal>While in preschool, early signs began to appear. Coordination challenges, balance issues, and a heart condition were pieces of a puzzle that finally came together around age nine with a diagnosis of Friedreich&rsquo;s Ataxia &mdash; a rare, progressive neurodegenerative disease that would shape Izzy&rsquo;s journey but never define who they were.</p>
+
+        <div class="parallax-break" data-reveal>
+          <div class="parallax-img" style="background-image: url('/assets/photos/story-childhood.jpg')" role="img" aria-label="Izzy as a child"></div>
+        </div>
 
         <blockquote class="pull-quote" data-reveal>
           <p>&ldquo;I can&rsquo;t even dance but I&rsquo;m in charge of the dances.&rdquo;</p>
@@ -87,7 +91,15 @@
 
         <p data-reveal>Their creative energy extended well beyond performance. Izzy wrote for the audio drama podcast <a href="https://podcasts.apple.com/us/podcast/21-midnight-delinquents-aka-looking-for-ghosts/id1202125388?i=1000480339905" target="_blank" rel="noopener"><em>Twelve Chimes It&rsquo;s Midnight</em><span class="sr-only"> (opens in new tab)</span></a> and served as writer and creative director for <a href="https://www.girlsmakegames.com/inspiration" target="_blank" rel="noopener"><em>Interfectorem</em><span class="sr-only"> (opens in new tab)</span></a>, a video game that won the grand prize at Girls Make Games National Demo Day in 2015. As a GMG alum and ambassador, they were invited to speak at the White House the following year. They also loved playing Dungeons &amp; Dragons, cosplaying at anime conventions, and &mdash; in 2019 &mdash; being matched with Maeve, their Canine Companions service dog and the love of their life.</p>
 
+        <div class="parallax-break" data-reveal>
+          <div class="parallax-img" style="background-image: url('/assets/photos/story-creative.jpg')" role="img" aria-label="Izzy's creative projects and adventures"></div>
+        </div>
+
         <p data-reveal>The transition to adulthood brought obstacles, but Izzy&rsquo;s positive attitude never wavered. When the challenges of living independently with a disability &mdash; compounded by COVID shutdowns &mdash; shifted their plans, they pivoted from film at SJSU to anthropology at College of Alameda, earning their associate&rsquo;s degree in 2025. An avid reader, Izzy loved horror &mdash; especially Stephen King. In later years, they discovered a passion for rockhounding, always chasing the perfect smooth, shiny stone, and embraced the simpler things: a warm bath, candles, chocolate cake, Coca-Cola, and trips to Disneyland.</p>
+
+        <div class="parallax-break" data-reveal>
+          <div class="parallax-img" style="background-image: url('/assets/photos/story-maeve.jpg')" role="img" aria-label="Izzy with Maeve"></div>
+        </div>
 
         <blockquote class="pull-quote" data-reveal>
           <p>&ldquo;Twenty-five years was not enough, but Izzy made the most of every one of them.&rdquo;</p>
@@ -218,7 +230,7 @@
         <h2 id="modal-title">Share Your Memory of Izzy</h2>
         <p class="modal-subtitle">Your message may be reviewed before appearing on this page. Your email will not be published.</p>
 
-        <form id="memory-form" action="https://formspree.io/f/mzdkozoj" method="POST">
+        <form id="memory-form" action="/api/submit" method="POST">
           <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
 
           <div class="form-group">
