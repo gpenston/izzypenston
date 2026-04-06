@@ -389,12 +389,14 @@ img {
 
 .gallery-item img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
   aspect-ratio: 1;
+  object-fit: cover;
 }
 
-.gallery-item.wide img { aspect-ratio: 2/1; }
+.gallery-item.wide img {
+  aspect-ratio: 2/1;
+}
 
 .gallery-caption-text {
   position: absolute;
@@ -729,6 +731,14 @@ footer {
 .lightbox-prev { left: 12px; }
 .lightbox-next { right: 12px; }
 
+/* ===== Noscript fallback ===== */
+/* Applied via <noscript> in index.html to prevent invisible content if JS fails */
+.no-js [data-reveal],
+.no-js [data-stagger] {
+  opacity: 1;
+  transform: none;
+}
+
 /* ===== Scroll-reveal & entrance animations ===== */
 [data-reveal],
 [data-stagger] {
@@ -748,6 +758,10 @@ footer {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   [data-reveal],
   [data-stagger] {
     opacity: 1;

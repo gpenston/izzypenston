@@ -8,7 +8,7 @@ Static memorial website at izzypenston.com. Pure HTML/CSS/vanilla JS — no fram
 - **Fonts:** Fraunces (headings), Albert Sans (body) via Google Fonts.
 - **Colors:** "Sunset Warmth" palette — orange primary (#C75D24), blue secondary (#3B7CB8), warm linen backgrounds.
 - **Layout:** max-width 720px container, 24px side padding.
-- **JS:** ES5 compatible (IIFE pattern, var, no arrow functions) for maximum browser support.
+- **JS:** No build tools, no transpiler, no bundler. Vanilla JS that runs directly in modern browsers. IIFE pattern preferred for module encapsulation.
 - **Animation:** Intersection Observer scroll-reveal with `data-reveal` / `data-stagger` attributes. Always respect `prefers-reduced-motion`.
 
 ## Local Dev
