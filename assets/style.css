@@ -99,7 +99,7 @@ img {
 
 /* ===== Layout ===== */
 .container {
-  max-width: 720px;
+  max-width: clamp(720px, 75vw, 900px);
   margin: 0 auto;
   padding: 0 24px;
 }
@@ -172,7 +172,7 @@ img {
 
 /* ===== Section ===== */
 .section {
-  padding: 56px 0;
+  padding: 72px 0;
   border-bottom: 1px solid var(--border);
 }
 
@@ -264,7 +264,7 @@ img {
 
 /* ===== Hero ===== */
 .hero {
-  padding: 64px 0 56px;
+  padding: 80px 0 72px;
   border-bottom: 1px solid var(--border);
 }
 
