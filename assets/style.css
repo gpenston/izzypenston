@@ -803,3 +803,13 @@ footer {
   .nav-links { gap: 16px; }
   .nav-links a { font-size: 13px; }
 }
+
+@media (max-width: 400px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-item.wide {
+    grid-column: span 1;
+  }
+}
