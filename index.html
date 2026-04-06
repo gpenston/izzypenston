@@ -155,6 +155,21 @@
         <p class="gallery-footer" data-reveal>Click any photo to view larger. Have a photo to share? <a href="#memories">Send it with your memory below.</a></p>
       </section>
 
+      <section class="section" id="memories">
+        <div class="section-label" data-reveal aria-hidden="true">Memories</div>
+        <h2 data-reveal>Words for Izzy</h2>
+
+        <div id="memories-list"></div>
+
+        <div id="memories-load-more-wrap">
+          <button class="load-more" id="memories-load-more">Load More Memories</button>
+        </div>
+
+        <div style="text-align: center; margin-top: 32px;" data-reveal>
+          <button class="btn-primary" id="share-memory-btn" type="button">Share Your Memory of Izzy</button>
+        </div>
+      </section>
+
     </main>
 
     <footer>
@@ -164,6 +179,51 @@
       <p class="footer-copy" data-reveal>With love from the Penston family &mdash; George, Zoe, Wendy &amp; Maeve</p>
     </footer>
 
+  </div>
+
+  <div class="modal-backdrop" id="memory-modal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+
+      <div id="modal-form-state">
+        <h2 id="modal-title">Share Your Memory of Izzy</h2>
+        <p class="modal-subtitle">Your message may be reviewed before appearing on this page. Your email will not be published.</p>
+
+        <form id="memory-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+
+          <div class="form-group">
+            <label for="memory-name">Your Name *</label>
+            <input type="text" id="memory-name" name="name" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="memory-email">Email *</label>
+            <p class="form-hint">For follow-up only &mdash; will not be displayed.</p>
+            <input type="email" id="memory-email" name="email" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="memory-relation">Your Relationship to Izzy</label>
+            <input type="text" id="memory-relation" name="relation" class="form-input" placeholder="Friend, classmate, family&hellip;">
+          </div>
+
+          <div class="form-group">
+            <label for="memory-text">Your Memory *</label>
+            <textarea id="memory-text" name="message" class="form-textarea" required placeholder="Share a favorite memory, story, or what Izzy meant to you&hellip;"></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width:100%;">Share Your Memory</button>
+
+          <p class="form-note">Have a photo of Izzy you&rsquo;d like to share? Email it to <strong>memories@izzypenston.com</strong> and we&rsquo;ll add it to the gallery.</p>
+        </form>
+      </div>
+
+      <div id="modal-thanks-state" style="display:none; text-align:center; padding: 40px 0;">
+        <h2 style="margin-bottom: 12px;">Thank You</h2>
+        <p style="color: var(--text-secondary); line-height: 1.7;">Your memory of Izzy has been received. We&rsquo;ll review it and add it to the page soon.</p>
+      </div>
+    </div>
   </div>
 
 </body>
