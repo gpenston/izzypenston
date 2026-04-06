@@ -33,7 +33,7 @@
     }
 
     if (e.key === 'Tab') {
-      var focusable = modal.querySelectorAll('button, [href], input:not([tabindex="-1"]), textarea, [tabindex]:not([tabindex="-1"])');
+      var focusable = modal.querySelectorAll('button:not([disabled]), [href], input:not([disabled]):not([tabindex="-1"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
       var first = focusable[0];
       var last = focusable[focusable.length - 1];
 
@@ -64,11 +64,13 @@
       if (response.ok) {
         formState.style.display = 'none';
         thanksState.style.display = '';
+        modal.setAttribute('aria-labelledby', 'modal-thanks-title');
         setTimeout(function () {
           close();
           setTimeout(function () {
             formState.style.display = '';
             thanksState.style.display = 'none';
+            modal.setAttribute('aria-labelledby', 'modal-title');
             form.reset();
           }, 300);
         }, 3000);

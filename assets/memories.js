@@ -35,8 +35,8 @@
       list.appendChild(createCard(memories[i]));
     }
     shown = end;
-    if (shown >= memories.length && btnWrap) {
-      btnWrap.style.display = 'none';
+    if (btnWrap) {
+      btnWrap.style.display = shown >= memories.length ? 'none' : '';
     }
   }
 
@@ -54,7 +54,7 @@
         }
       })
       .catch(function () {
-        // Silently fail — no memories to show yet
+        if (btnWrap) btnWrap.style.display = 'none';
       });
 
     var btn = document.getElementById('memories-load-more');

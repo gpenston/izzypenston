@@ -161,7 +161,7 @@
 
         <div id="memories-list"></div>
 
-        <div id="memories-load-more-wrap">
+        <div id="memories-load-more-wrap" style="display:none">
           <button class="load-more" id="memories-load-more">Load More Memories</button>
         </div>
 
@@ -199,8 +199,8 @@
 
           <div class="form-group">
             <label for="memory-email">Email *</label>
-            <p class="form-hint">For follow-up only &mdash; will not be displayed.</p>
-            <input type="email" id="memory-email" name="email" class="form-input" required>
+            <p id="email-hint" class="form-hint">For follow-up only &mdash; will not be displayed.</p>
+            <input type="email" id="memory-email" name="email" class="form-input" aria-describedby="email-hint" required>
           </div>
 
           <div class="form-group">
@@ -220,7 +220,7 @@
       </div>
 
       <div id="modal-thanks-state" style="display:none; text-align:center; padding: 40px 0;">
-        <h2 style="margin-bottom: 12px;">Thank You</h2>
+        <h2 id="modal-thanks-title" style="margin-bottom: 12px;">Thank You</h2>
         <p style="color: var(--text-secondary); line-height: 1.7;">Your memory of Izzy has been received. We&rsquo;ll review it and add it to the page soon.</p>
       </div>
     </div>

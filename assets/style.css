@@ -570,10 +570,11 @@ img {
   transition: border-color 0.2s;
 }
 
-.form-input:focus,
-.form-textarea:focus {
+.form-input:focus-visible,
+.form-textarea:focus-visible {
   border-color: var(--orange);
-  outline: none;
+  outline: 2px solid var(--orange);
+  outline-offset: 0;
 }
 
 .form-textarea {
@@ -774,6 +775,11 @@ footer {
 
   .gallery-item:hover {
     transform: none;
+  }
+
+  .modal-backdrop,
+  .modal {
+    transition: none;
   }
 }
 
