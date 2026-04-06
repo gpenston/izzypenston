@@ -1,0 +1,8 @@
+[
+  { "file": "placeholder-1.jpg", "caption": "Izzy and Maeve", "wide": true, "order": 1 },
+  { "file": "placeholder-2.jpg", "caption": "Cosplay at anime con", "wide": false, "order": 2 },
+  { "file": "placeholder-3.jpg", "caption": "", "wide": false, "order": 3 },
+  { "file": "placeholder-4.jpg", "caption": "Girls Make Games Demo Day, 2015", "wide": false, "order": 4 },
+  { "file": "placeholder-5.jpg", "caption": "Disneyland", "wide": true, "order": 5 },
+  { "file": "placeholder-6.jpg", "caption": "", "wide": false, "order": 6 }
+]
