@@ -771,6 +771,10 @@ footer {
     transform: none;
     transition: none;
   }
+
+  .gallery-item:hover {
+    transform: none;
+  }
 }
 
 /* ===== Responsive ===== */

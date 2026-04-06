@@ -31,6 +31,7 @@
 
     caption = document.createElement('div');
     caption.className = 'lightbox-caption';
+    caption.setAttribute('aria-live', 'polite');
 
     backdrop.appendChild(closeBtn);
     backdrop.appendChild(prevBtn);
