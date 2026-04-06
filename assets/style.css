@@ -136,8 +136,17 @@ img {
 
 /* ===== Nav ===== */
 .nav {
-  padding: 24px 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding: 20px 0;
+  background: var(--bg);
   border-bottom: 1px solid var(--border);
+  transition: box-shadow 0.2s ease;
+}
+
+.nav.is-scrolled {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 
 .nav-inner {
@@ -661,8 +670,10 @@ img {
 
 /* ===== Footer ===== */
 footer {
-  padding: 48px 0;
+  padding: 56px 0;
   text-align: center;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
 }
 
 .footer-quote {

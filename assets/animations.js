@@ -26,4 +26,12 @@
   } else {
     initStagger();
   }
+
+  // Nav scroll shadow
+  var nav = document.querySelector('.nav');
+  if (nav) {
+    window.addEventListener('scroll', function () {
+      nav.classList.toggle('is-scrolled', window.scrollY > 10);
+    }, { passive: true });
+  }
 }());
