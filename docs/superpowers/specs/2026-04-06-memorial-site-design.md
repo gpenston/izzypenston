@@ -108,7 +108,11 @@ Milestones: Born in SF (2000), Alameda (2003), FA diagnosis (~2009), GMG grand p
 - Optional captions below images
 - Vanilla JS lightbox: click to open full-screen overlay, keyboard navigation (Escape, arrows), accessible
 - Caption below grid: "Have a photo to share? Send it with your memory below."
-- Designed to handle 25-50+ photos with lazy loading
+
+**Scaling for large collections:**
+- "Load more" button after initial batch (e.g. first 18 photos visible, rest loaded on demand) to keep initial page weight reasonable
+- Photos organized in a flat `assets/photos/` directory with a JSON manifest (`assets/photos/manifest.json`) listing filename, caption, and optional sort order — makes adding photos a simple edit without touching HTML
+- Lazy loading ensures performance stays good regardless of collection size
 
 Photos stored in `assets/photos/` — George provides these. Placeholders during build.
 
@@ -116,17 +120,24 @@ Photos stored in `assets/photos/` — George provides these. Placeholders during
 
 **Display:** Curated memory cards in a vertical stack.
 - Each card: name, optional relationship, message text
-- Styled cards on `--bg-secondary` with border
-- Data stored in inline `<script type="application/json" id="memories-data">` block
-- `memories.js` renders cards on page load
+- Data stored in a separate `assets/memories.json` file (not inline) — easier to manage as the collection grows
+- `memories.js` reads the JSON, renders cards on page load
+- "Load more" button after initial batch (e.g. first 6 visible) for scaling as memories accumulate
+- Cards styled on `--bg-secondary` with border, consistent with the rest of the site
 
-**Form:**
+**Form — Modal Dialog:**
+The "Share a Memory" form lives in a **modal dialog** triggered by a prominent CTA button in the Memories section, rather than inline on the page. This keeps the main page focused on reading memories and provides a clean, focused writing experience.
+
+- CTA button in the Memories section: "Share Your Memory of Izzy" (orange primary button)
+- Opens a centered modal overlay with backdrop
+- Modal is accessible: focus trap, Escape to close, `aria-modal`, `role="dialog"`, returns focus to trigger button on close
 - Fields: Name (required), Email (required, not published), Relationship (optional), Memory textarea (required)
 - Hidden honeypot field for spam protection
-- Moderation notice: "Your message may be reviewed before appearing on this page."
+- Moderation notice at top: "Your message may be reviewed before appearing on this page. Your email will not be published."
 - Submission via Formspree (free tier, 50/month) → email to George/Zoe
-- Inline thank-you state after submission (JS replaces form)
-- Photo nudge: "Have a photo of Izzy you'd like to share? Email it to memories@izzypenston.com"
+- On success: modal content transitions to a thank-you state before auto-closing
+- Photo nudge in the modal: "Have a photo of Izzy you'd like to share? Email it to memories@izzypenston.com and we'll add it to the gallery."
+- Modal can also be linked to directly via `#share` hash for sharing the form URL
 
 ### FA Awareness + Donate
 
@@ -153,8 +164,11 @@ izzypenston/
 │   ├── animations.js
 │   ├── lightbox.js
 │   ├── memories.js
+│   ├── memories.json          # Curated guest memories (add approved entries here)
+│   ├── modal.js               # Share a Memory modal dialog
 │   ├── og-image.jpg
 │   └── photos/
+│       ├── manifest.json      # Photo list: filename, caption, sort order
 │       └── .gitkeep
 ├── docs/
 │   ├── izzy_obituary.md
