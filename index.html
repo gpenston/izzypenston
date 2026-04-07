@@ -234,25 +234,26 @@
 
       <div id="modal-form-state">
         <h2 id="modal-title">Share Your Memory of Izzy</h2>
-        <p class="modal-subtitle">Your message may be reviewed before appearing on this page. Your email will not be published.</p>
+        <p class="modal-subtitle">We review all memories before they appear here. Your email stays private.</p>
 
         <form id="memory-form" action="/api/submit" method="POST">
           <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
 
-          <div class="form-group">
-            <label for="memory-name">Your Name *</label>
-            <input type="text" id="memory-name" name="name" class="form-input" required>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="memory-name">Your Name *</label>
+              <input type="text" id="memory-name" name="name" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+              <label for="memory-relation">Relationship to Izzy</label>
+              <input type="text" id="memory-relation" name="relation" class="form-input" placeholder="Friend, classmate&hellip;">
+            </div>
           </div>
 
           <div class="form-group">
-            <label for="memory-email">Email *</label>
-            <p id="email-hint" class="form-hint">For follow-up only. Will not be displayed.</p>
-            <input type="email" id="memory-email" name="email" class="form-input" aria-describedby="email-hint" required>
-          </div>
-
-          <div class="form-group">
-            <label for="memory-relation">Your Relationship to Izzy</label>
-            <input type="text" id="memory-relation" name="relation" class="form-input" placeholder="Friend, classmate, family&hellip;">
+            <label for="memory-email">Email * <span class="form-hint-inline">(private &mdash; not displayed)</span></label>
+            <input type="email" id="memory-email" name="email" class="form-input" required>
           </div>
 
           <div class="form-group">
