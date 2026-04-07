@@ -624,12 +624,18 @@ img {
 }
 
 /* ===== Memory photo pile ===== */
-.memory-photo-pile {
-  display: inline-block;
+.memory-card.has-photos {
   position: relative;
-  margin-top: 14px;
+  padding-right: 108px;
+}
+
+.memory-photo-pile {
+  position: absolute;
+  top: 20px;
+  right: 20px;
   cursor: pointer;
   user-select: none;
+  text-align: center;
 }
 
 .pile-stack {

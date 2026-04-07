@@ -99,6 +99,8 @@
   function createPhotoPile(photos, cardEl) {
     if (!photos || photos.length === 0) return null;
 
+    cardEl.classList.add('has-photos');
+
     var pile = document.createElement('div');
     pile.className = 'memory-photo-pile';
     pile.setAttribute('role', 'button');
