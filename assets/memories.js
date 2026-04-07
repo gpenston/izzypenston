@@ -5,9 +5,16 @@
   var list = document.getElementById('memories-list');
   var btnWrap = document.getElementById('memories-load-more-wrap');
 
-  function createCard(memory) {
+  function createCard(memory, index) {
     var div = document.createElement('div');
     div.className = 'memory-card';
+
+    // Subtle tilt — pre-varied values, consistent per position
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      var tilts = [-1.8, 1.2, -0.8, 2.1, -1.4, 0.9, -2.0, 1.6, -0.6, 1.9, -1.1, 2.3, -0.7, 1.5];
+      var deg = tilts[index % tilts.length];
+      div.style.transform = 'rotate(' + deg + 'deg)';
+    }
 
     var name = document.createElement('div');
     name.className = 'memory-name';
@@ -32,7 +39,7 @@
   function renderBatch() {
     var end = Math.min(shown + BATCH_SIZE, memories.length);
     for (var i = shown; i < end; i++) {
-      list.appendChild(createCard(memories[i]));
+      list.appendChild(createCard(memories[i], i));
     }
     shown = end;
     if (btnWrap) {

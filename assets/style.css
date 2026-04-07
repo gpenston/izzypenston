@@ -556,12 +556,31 @@ img {
 }
 
 /* ===== Memory Cards ===== */
+#memories-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 600px) {
+  #memories-list {
+    grid-template-columns: 1fr;
+  }
+}
+
 .memory-card {
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 24px;
-  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.memory-card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  transform: rotate(0deg) translateY(-2px) !important;
 }
 
 .memory-name {
