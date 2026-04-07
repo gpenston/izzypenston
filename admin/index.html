@@ -312,8 +312,14 @@
 <body>
 
   <div class="header">
-    <h1>Izzy<span>.</span> Admin</h1>
-    <span class="badge" id="badge" style="display:none">0</span>
+    <h1><a href="https://izzypenston.com" style="text-decoration:none; color:inherit;">Izzy<span>.</span></a> Admin</h1>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <a href="https://izzypenston.com" style="font-size:13px; font-weight:600; color:var(--text-secondary); text-decoration:none; display:flex; align-items:center; gap:5px; border:1px solid var(--border); padding:6px 14px; border-radius:8px; transition:color 0.2s, border-color 0.2s;" onmouseover="this.style.color='var(--orange)';this.style.borderColor='var(--orange)'" onmouseout="this.style.color='var(--text-secondary)';this.style.borderColor='var(--border)'">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        View Site
+      </a>
+      <span class="badge" id="badge" style="display:none">0</span>
+    </div>
   </div>
 
   <div class="container">
@@ -341,7 +347,7 @@
 
   <script>
   (function () {
-    var API_BASE = '/api/admin';
+    var API_BASE = 'https://izzypenston.com/api/admin';
     var pin = localStorage.getItem('admin_pin') || '';
     var activeTab = 'pending';
 
