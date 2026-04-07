@@ -1019,7 +1019,7 @@ img {
   background: var(--bg-secondary);
   border-radius: 14px;
   padding: 32px;
-  margin-bottom: 32px;
+  margin-top: 40px;
 }
 
 .fa-section h3 {
