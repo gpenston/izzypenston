@@ -82,12 +82,20 @@
 
   function updateActiveNav() {
     var scrollY = window.scrollY;
+    var atBottom = (window.innerHeight + scrollY) >= document.body.scrollHeight - 40;
     var found = null;
-    sections.forEach(function (section, i) {
-      if (section && section.offsetTop - 100 <= scrollY) {
-        found = i;
-      }
-    });
+
+    if (atBottom) {
+      // At the bottom of the page — activate the last section
+      found = sections.length - 1;
+    } else {
+      sections.forEach(function (section, i) {
+        if (section && section.offsetTop - 100 <= scrollY) {
+          found = i;
+        }
+      });
+    }
+
     // Only update when we've crossed into a new section — never reset to nothing
     if (found !== null) lastActiveIndex = found;
     navLinks.forEach(function (a, i) {
