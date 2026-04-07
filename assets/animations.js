@@ -86,7 +86,6 @@
     var found = null;
 
     if (atBottom) {
-      // At the bottom of the page — activate the last section
       found = sections.length - 1;
     } else {
       sections.forEach(function (section, i) {
@@ -96,8 +95,8 @@
       });
     }
 
-    // Only update when we've crossed into a new section — never reset to nothing
-    if (found !== null) lastActiveIndex = found;
+    // Always reflect true scroll position — don't persist stale state
+    lastActiveIndex = found;
     navLinks.forEach(function (a, i) {
       a.classList.toggle('is-active', i === lastActiveIndex);
     });
