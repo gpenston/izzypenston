@@ -800,10 +800,10 @@ footer {
 
 .footer-star {
   display: block;
-  width: 72px;
-  height: 72px;
+  width: 84px;
+  height: 84px;
   margin: 0 auto 28px;
-  opacity: 0.55;
+  opacity: 0.6;
 }
 
 .footer-quote {
