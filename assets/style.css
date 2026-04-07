@@ -231,6 +231,8 @@ img {
   font-size: 26px;
   margin-bottom: 20px;
   max-width: 68ch;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .section p {
@@ -238,6 +240,8 @@ img {
   line-height: 1.8;
   max-width: 68ch;
   margin-bottom: 16px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* ===== Buttons ===== */
@@ -348,7 +352,7 @@ img {
 .pull-quote {
   border-left: 3px solid var(--blue);
   padding: 8px 0 8px 24px;
-  margin: 28px 0;
+  margin: 28px auto;
   max-width: 68ch;
 }
 
