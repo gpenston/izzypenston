@@ -997,6 +997,12 @@ img {
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.donate-card a {
+  margin-top: auto;
 }
 
 .donate-card h3 {
@@ -1019,7 +1025,7 @@ img {
   background: var(--bg-secondary);
   border-radius: 14px;
   padding: 32px;
-  margin-top: 40px;
+  margin-top: 20px;
 }
 
 .fa-section h3 {
