@@ -43,7 +43,7 @@
   function init() {
     if (!list) return;
 
-    fetch('/assets/memories.json')
+    fetch('/assets/memories.json?v=' + Date.now())
       .then(function (r) { return r.json(); })
       .then(function (data) {
         memories = data;

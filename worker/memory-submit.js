@@ -6,6 +6,7 @@
  *   GET  /api/admin/pending  — PIN-protected → lists pending memory issues
  *   POST /api/admin/approve/:id — PIN-protected → adds "approved" label
  *   POST /api/admin/reject/:id  — PIN-protected → adds "rejected" label + closes
+ *   POST /api/admin/unpublish   — PIN-protected → removes a published memory
  *
  * Secrets (set in Cloudflare dashboard):
  *   GITHUB_TOKEN  — fine-grained PAT with Issues write on gpenston/izzypenston
@@ -174,6 +175,50 @@ async function handleAdminReject(issueNumber, env) {
   return json({ ok: true });
 }
 
+async function handleAdminUnpublish(request, env) {
+  const { name, text } = await request.json();
+  if (!name || !text) {
+    return json({ ok: false, error: 'name and text are required' }, 400);
+  }
+
+  // Fetch current memories.json from the repo
+  const fileRes = await githubFetch('/contents/assets/memories.json', env);
+  if (!fileRes.ok) {
+    return json({ ok: false, error: 'Failed to fetch memories.json' }, 500);
+  }
+
+  const fileData = await fileRes.json();
+  const content = atob(fileData.content.replace(/\n/g, ''));
+  const memories = JSON.parse(content);
+
+  // Find and remove the matching memory
+  const idx = memories.findIndex(m => m.name === name && m.text === text);
+  if (idx === -1) {
+    return json({ ok: false, error: 'Memory not found' }, 404);
+  }
+
+  memories.splice(idx, 1);
+
+  // Commit updated file via GitHub Contents API
+  const updated = JSON.stringify(memories, null, 2) + '\n';
+  const putRes = await githubFetch('/contents/assets/memories.json', env, {
+    method: 'PUT',
+    body: JSON.stringify({
+      message: `Remove memory from ${name}`,
+      content: btoa(unescape(encodeURIComponent(updated))),
+      sha: fileData.sha
+    })
+  });
+
+  if (!putRes.ok) {
+    const err = await putRes.text();
+    console.error('GitHub PUT error:', err);
+    return json({ ok: false, error: 'Failed to update memories.json' }, 500);
+  }
+
+  return json({ ok: true });
+}
+
 // --- Router ---
 
 export default {
@@ -210,6 +255,10 @@ export default {
       const rejectMatch = path.match(/^\/api\/admin\/reject\/(\d+)$/);
       if (rejectMatch && request.method === 'POST') {
         return handleAdminReject(rejectMatch[1], env);
+      }
+
+      if (path === '/api/admin/unpublish' && request.method === 'POST') {
+        return handleAdminUnpublish(request, env);
       }
     }
 

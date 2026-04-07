@@ -76,7 +76,12 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add assets/memories.json
           git commit -m "Add memory from ${MEMORY_NAME}"
-          git push
+          for i in 1 2 3; do
+            git push && break
+            echo "Push failed, retrying ($i/3)..."
+            git pull --rebase
+            sleep 2
+          done
 
       - name: Close issue with comment
         uses: actions/github-script@v7

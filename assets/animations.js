@@ -35,23 +35,32 @@
     }, { passive: true });
   }
 
-  // Parallax scroll effect
-  var parallaxEls = document.querySelectorAll('.parallax-img');
-  if (parallaxEls.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    function updateParallax() {
+  // Story photo scroll effects (Apple-style scale, tilt, fade)
+  var storyPhotos = document.querySelectorAll('.story-photo img');
+  if (storyPhotos.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    function updateStoryPhotos() {
       var viewH = window.innerHeight;
-      parallaxEls.forEach(function (img) {
+      storyPhotos.forEach(function (img) {
         var rect = img.parentElement.getBoundingClientRect();
         if (rect.bottom > 0 && rect.top < viewH) {
-          var progress = (rect.top + rect.height) / (viewH + rect.height);
-          var offset = (progress - 0.5) * -100;
-          img.style.transform = 'translateY(' + offset + 'px)';
+          // progress: 0 = entering bottom of viewport, 1 = exiting top
+          var progress = 1 - (rect.top + rect.height) / (viewH + rect.height);
+          // Ease: ramp up quickly in the first half, plateau in the center
+          var eased = Math.min(progress * 2, 1);
+
+          var scale = 0.92 + 0.08 * eased;
+          var translateY = 20 * (1 - eased);
+          var rotateX = 3 * (1 - eased);
+          var opacity = 0.6 + 0.4 * eased;
+
+          img.style.transform = 'scale(' + scale + ') translateY(' + translateY + 'px) rotateX(' + rotateX + 'deg)';
+          img.style.opacity = opacity;
         }
       });
     }
     window.addEventListener('scroll', function () {
-      requestAnimationFrame(updateParallax);
+      requestAnimationFrame(updateStoryPhotos);
     }, { passive: true });
-    updateParallax();
+    updateStoryPhotos();
   }
 }());

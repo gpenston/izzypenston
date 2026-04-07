@@ -259,38 +259,41 @@ img {
   color: white;
 }
 
-/* ===== Parallax Story Breaks ===== */
-.parallax-break {
-  width: 100vw;
-  height: 360px;
-  overflow: hidden;
-  margin: 48px 0;
-  position: relative;
-  left: 50%;
-  margin-left: -50vw;
+/* ===== Story Photos (Apple-style scroll effects) ===== */
+.story-photo {
+  max-width: 500px;
+  margin: 48px auto;
+  perspective: 1000px;
 }
 
-.parallax-img {
+.story-photo img {
   width: 100%;
-  height: 150%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  will-change: transform;
+  height: auto;
+  display: block;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  will-change: transform, opacity;
+  transform: scale(0.92) translateY(20px) rotateX(3deg);
+  opacity: 0.6;
+  transition: box-shadow 0.3s ease;
+  transform-origin: center bottom;
+}
+
+.story-photo.is-revealed img {
+  /* JS drives transform + opacity via scroll; this is the fallback end state */
 }
 
 @media (max-width: 600px) {
-  .parallax-break {
-    height: 260px;
-    margin: 32px 0;
-    margin-left: -50vw;
+  .story-photo {
+    max-width: 85%;
+    margin: 32px auto;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .parallax-img {
-    height: 100%;
-    transform: none !important;
+  .story-photo img {
+    transform: none;
+    opacity: 1;
   }
 }
 

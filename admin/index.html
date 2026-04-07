@@ -140,6 +140,41 @@
       cursor: pointer;
     }
 
+    /* --- Tabs --- */
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px 0;
+      font-family: 'Albert Sans', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text-tertiary);
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .tab.active {
+      color: var(--orange);
+      border-bottom-color: var(--orange);
+    }
+
+    .tab-count {
+      font-weight: 400;
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+
     /* --- Memory Cards --- */
     .empty {
       text-align: center;
@@ -222,6 +257,14 @@
       color: var(--red);
     }
 
+    .btn-remove {
+      background: transparent;
+      border: 1.5px solid var(--red);
+      color: var(--red);
+      flex: none;
+      padding: 10px 20px;
+    }
+
     .status-msg {
       text-align: center;
       padding: 12px;
@@ -238,6 +281,7 @@
       .status-msg.success { background: #1a2e1e; }
       .status-msg.error { background: #2e1a1a; }
       .pin-btn { color: #1E1B18; }
+      .btn-approve { color: #1E1B18; }
     }
 
     .loading {
@@ -246,18 +290,23 @@
       padding: 60px 0;
     }
 
-    .refresh-btn {
-      display: block;
-      margin: 0 auto 24px;
-      background: transparent;
-      border: 1.5px solid var(--border);
-      color: var(--text-secondary);
-      font-family: 'Albert Sans', sans-serif;
-      font-size: 14px;
-      padding: 8px 20px;
-      border-radius: 8px;
-      cursor: pointer;
+    .confirm-dialog {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-top: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
+
+    .confirm-dialog p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .confirm-dialog .card-actions { justify-content: flex-end; }
+    .confirm-dialog .btn { flex: none; padding: 8px 20px; font-size: 14px; }
   </style>
 </head>
 <body>
@@ -280,9 +329,13 @@
 
     <!-- Main Screen -->
     <div id="main-screen" style="display:none">
-      <button class="refresh-btn" id="refresh-btn" type="button">Refresh</button>
+      <div class="tabs">
+        <button class="tab active" id="tab-pending" data-tab="pending">Pending <span class="tab-count" id="pending-count"></span></button>
+        <button class="tab" id="tab-published" data-tab="published">Published <span class="tab-count" id="published-count"></span></button>
+      </div>
       <div id="status"></div>
-      <div id="cards"></div>
+      <div id="pending-panel"></div>
+      <div id="published-panel" style="display:none"></div>
     </div>
   </div>
 
@@ -290,6 +343,7 @@
   (function () {
     var API_BASE = '/api/admin';
     var pin = localStorage.getItem('admin_pin') || '';
+    var activeTab = 'pending';
 
     var pinScreen = document.getElementById('pin-screen');
     var mainScreen = document.getElementById('main-screen');
@@ -297,9 +351,13 @@
     var pinBtn = document.getElementById('pin-btn');
     var pinError = document.getElementById('pin-error');
     var badge = document.getElementById('badge');
-    var cards = document.getElementById('cards');
+    var pendingPanel = document.getElementById('pending-panel');
+    var publishedPanel = document.getElementById('published-panel');
     var status = document.getElementById('status');
-    var refreshBtn = document.getElementById('refresh-btn');
+    var tabPending = document.getElementById('tab-pending');
+    var tabPublished = document.getElementById('tab-published');
+    var pendingCount = document.getElementById('pending-count');
+    var publishedCount = document.getElementById('published-count');
 
     function showStatus(msg, type) {
       status.innerHTML = '<div class="status-msg ' + type + '">' + msg + '</div>';
@@ -311,11 +369,22 @@
       return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     }
 
-    function adminFetch(path, method) {
-      return fetch(API_BASE + path, {
+    function escHtml(str) {
+      var div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function adminFetch(path, method, body) {
+      var opts = {
         method: method || 'GET',
         headers: { 'X-Admin-Pin': pin }
-      }).then(function (r) {
+      };
+      if (body) {
+        opts.headers['Content-Type'] = 'application/json';
+        opts.body = JSON.stringify(body);
+      }
+      return fetch(API_BASE + path, opts).then(function (r) {
         if (r.status === 401) {
           localStorage.removeItem('admin_pin');
           pin = '';
@@ -329,21 +398,38 @@
       });
     }
 
-    function loadMemories() {
-      cards.innerHTML = '<div class="loading">Loading memories&hellip;</div>';
+    // --- Tabs ---
+    function switchTab(tab) {
+      activeTab = tab;
+      tabPending.classList.toggle('active', tab === 'pending');
+      tabPublished.classList.toggle('active', tab === 'published');
+      pendingPanel.style.display = tab === 'pending' ? '' : 'none';
+      publishedPanel.style.display = tab === 'published' ? '' : 'none';
+
+      if (tab === 'pending') loadPending();
+      if (tab === 'published') loadPublished();
+    }
+
+    tabPending.addEventListener('click', function () { switchTab('pending'); });
+    tabPublished.addEventListener('click', function () { switchTab('published'); });
+
+    // --- Pending Memories ---
+    function loadPending() {
+      pendingPanel.innerHTML = '<div class="loading">Loading&hellip;</div>';
 
       adminFetch('/pending').then(function (data) {
         if (!data.ok) {
-          cards.innerHTML = '<div class="empty"><h2>Error</h2><p>Could not load memories.</p></div>';
+          pendingPanel.innerHTML = '<div class="empty"><h2>Error</h2><p>Could not load memories.</p></div>';
           return;
         }
 
         var memories = data.memories;
         badge.textContent = memories.length;
         badge.style.display = memories.length > 0 ? '' : 'none';
+        pendingCount.textContent = memories.length > 0 ? '(' + memories.length + ')' : '';
 
         if (memories.length === 0) {
-          cards.innerHTML = '<div class="empty"><h2>All caught up</h2><p>No pending memories to review.</p></div>';
+          pendingPanel.innerHTML = '<div class="empty"><h2>All caught up</h2><p>No pending memories to review.</p></div>';
           return;
         }
 
@@ -362,21 +448,50 @@
           html += '<button class="btn btn-dismiss" data-id="' + m.id + '" data-action="reject">Dismiss</button>';
           html += '</div></div>';
         }
-        cards.innerHTML = html;
+        pendingPanel.innerHTML = html;
       }).catch(function (err) {
         if (err.message !== 'Unauthorized') {
-          cards.innerHTML = '<div class="empty"><h2>Error</h2><p>Could not load memories.</p></div>';
+          pendingPanel.innerHTML = '<div class="empty"><h2>Error</h2><p>Could not load memories.</p></div>';
         }
       });
     }
 
-    function escHtml(str) {
-      var div = document.createElement('div');
-      div.textContent = str;
-      return div.innerHTML;
+    // --- Published Memories ---
+    function loadPublished() {
+      publishedPanel.innerHTML = '<div class="loading">Loading&hellip;</div>';
+
+      fetch('/assets/memories.json?v=' + Date.now())
+        .then(function (r) { return r.json(); })
+        .then(function (memories) {
+          publishedCount.textContent = memories.length > 0 ? '(' + memories.length + ')' : '';
+
+          if (memories.length === 0) {
+            publishedPanel.innerHTML = '<div class="empty"><h2>No published memories</h2><p>Approved memories will appear here.</p></div>';
+            return;
+          }
+
+          var html = '';
+          for (var i = 0; i < memories.length; i++) {
+            var m = memories[i];
+            html += '<div class="card" data-pub-idx="' + i + '">';
+            html += '<div class="card-name">' + escHtml(m.name) + '</div>';
+            if (m.relation) {
+              html += '<div class="card-relation">' + escHtml(m.relation) + '</div>';
+            }
+            html += '<div class="card-text">' + escHtml(m.text) + '</div>';
+            html += '<div class="card-actions" style="justify-content: flex-end;">';
+            html += '<button class="btn btn-remove" data-pub-name="' + escHtml(m.name) + '" data-pub-idx="' + i + '">Remove</button>';
+            html += '</div></div>';
+          }
+          publishedPanel.innerHTML = html;
+        })
+        .catch(function () {
+          publishedPanel.innerHTML = '<div class="empty"><h2>Error</h2><p>Could not load published memories.</p></div>';
+        });
     }
 
-    function handleAction(id, action) {
+    // --- Actions ---
+    function handlePendingAction(id, action) {
       var card = document.getElementById('card-' + id);
       var btns = card.querySelectorAll('.btn');
       btns.forEach(function (b) { b.disabled = true; });
@@ -387,11 +502,12 @@
           card.style.transition = 'opacity 0.3s';
           setTimeout(function () {
             card.remove();
-            var remaining = cards.querySelectorAll('.card').length;
+            var remaining = pendingPanel.querySelectorAll('.card').length;
             badge.textContent = remaining;
+            pendingCount.textContent = remaining > 0 ? '(' + remaining + ')' : '';
             if (remaining === 0) {
               badge.style.display = 'none';
-              cards.innerHTML = '<div class="empty"><h2>All caught up</h2><p>No pending memories to review.</p></div>';
+              pendingPanel.innerHTML = '<div class="empty"><h2>All caught up</h2><p>No pending memories to review.</p></div>';
             }
           }, 300);
           showStatus(action === 'approve' ? 'Memory approved — it will appear on the site shortly.' : 'Memory dismissed.', 'success');
@@ -405,14 +521,95 @@
       });
     }
 
-    // Event delegation for approve/dismiss buttons
-    cards.addEventListener('click', function (e) {
+    // Store published memories for unpublish lookup
+    var publishedMemories = [];
+
+    function handleRemove(btn) {
+      // Show confirmation inline
+      var card = btn.closest('.card');
+      var existing = card.querySelector('.confirm-dialog');
+      if (existing) { existing.remove(); return; }
+
+      var idx = parseInt(btn.dataset.pubIdx, 10);
+
+      // Fetch current memories to get the exact name+text
+      fetch('/assets/memories.json?v=' + Date.now())
+        .then(function (r) { return r.json(); })
+        .then(function (memories) {
+          if (idx >= memories.length) return;
+          var m = memories[idx];
+
+          var dialog = document.createElement('div');
+          dialog.className = 'confirm-dialog';
+          dialog.innerHTML = '<p>Remove this memory from the site? This takes effect immediately.</p>'
+            + '<div class="card-actions">'
+            + '<button class="btn btn-dismiss" data-confirm-cancel>Cancel</button>'
+            + '<button class="btn btn-remove" data-confirm-remove data-rm-name="' + escHtml(m.name) + '">Remove</button>'
+            + '</div>';
+
+          // Store text in a data attribute safely
+          dialog.querySelector('[data-confirm-remove]').dataset.rmText = m.text;
+
+          card.appendChild(dialog);
+        });
+    }
+
+    function doRemove(btn, card) {
+      var name = btn.dataset.rmName;
+      var text = btn.dataset.rmText;
+      btn.disabled = true;
+
+      adminFetch('/unpublish', 'POST', { name: name, text: text }).then(function (data) {
+        if (data.ok) {
+          card.style.opacity = '0.4';
+          card.style.transition = 'opacity 0.3s';
+          setTimeout(function () {
+            card.remove();
+            var remaining = publishedPanel.querySelectorAll('.card').length;
+            publishedCount.textContent = remaining > 0 ? '(' + remaining + ')' : '';
+            if (remaining === 0) {
+              publishedPanel.innerHTML = '<div class="empty"><h2>No published memories</h2><p>Approved memories will appear here.</p></div>';
+            }
+          }, 300);
+          showStatus('Memory removed from the site.', 'success');
+        } else {
+          showStatus(data.error || 'Something went wrong. Try again.', 'error');
+          btn.disabled = false;
+        }
+      }).catch(function () {
+        showStatus('Something went wrong. Try again.', 'error');
+        btn.disabled = false;
+      });
+    }
+
+    // Event delegation — Pending panel
+    pendingPanel.addEventListener('click', function (e) {
       var btn = e.target.closest('[data-action]');
       if (!btn || btn.disabled) return;
-      handleAction(btn.dataset.id, btn.dataset.action);
+      handlePendingAction(btn.dataset.id, btn.dataset.action);
     });
 
-    // PIN entry
+    // Event delegation — Published panel
+    publishedPanel.addEventListener('click', function (e) {
+      var cancelBtn = e.target.closest('[data-confirm-cancel]');
+      if (cancelBtn) {
+        cancelBtn.closest('.confirm-dialog').remove();
+        return;
+      }
+
+      var removeConfirmBtn = e.target.closest('[data-confirm-remove]');
+      if (removeConfirmBtn && !removeConfirmBtn.disabled) {
+        doRemove(removeConfirmBtn, removeConfirmBtn.closest('.card'));
+        return;
+      }
+
+      var removeBtn = e.target.closest('.btn-remove');
+      if (removeBtn && !removeBtn.dataset.confirmRemove) {
+        handleRemove(removeBtn);
+      }
+    });
+
+    // --- PIN Entry ---
     function tryPin() {
       var val = pinInput.value.trim();
       if (!val) return;
@@ -421,7 +618,7 @@
       pinScreen.style.display = 'none';
       mainScreen.style.display = '';
       pinError.style.display = 'none';
-      loadMemories();
+      loadPending();
     }
 
     pinBtn.addEventListener('click', tryPin);
@@ -429,13 +626,11 @@
       if (e.key === 'Enter') tryPin();
     });
 
-    refreshBtn.addEventListener('click', loadMemories);
-
     // Auto-start if PIN is saved
     if (pin) {
       pinScreen.style.display = 'none';
       mainScreen.style.display = '';
-      loadMemories();
+      loadPending();
     }
   }());
   </script>
