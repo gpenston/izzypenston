@@ -78,17 +78,20 @@
   var sections = navLinks.map(function (a) {
     return document.querySelector(a.getAttribute('href'));
   });
+  var lastActiveIndex = null;
 
   function updateActiveNav() {
     var scrollY = window.scrollY;
-    var active = null;
+    var found = null;
     sections.forEach(function (section, i) {
       if (section && section.offsetTop - 100 <= scrollY) {
-        active = i;
+        found = i;
       }
     });
+    // Only update when we've crossed into a new section — never reset to nothing
+    if (found !== null) lastActiveIndex = found;
     navLinks.forEach(function (a, i) {
-      a.classList.toggle('is-active', i === active);
+      a.classList.toggle('is-active', i === lastActiveIndex);
     });
   }
 
