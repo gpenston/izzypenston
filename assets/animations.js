@@ -35,7 +35,30 @@
     }, { passive: true });
   }
 
-  // Smooth scroll with nav offset for anchor links
+  // Smooth scroll with nav offset and custom easing
+  function smoothScrollTo(targetY, duration) {
+    var startY = window.scrollY;
+    var distance = targetY - startY;
+    var startTime = null;
+
+    // Ease in-out cubic
+    function ease(t) {
+      return t < 0.5
+        ? 4 * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var elapsed = timestamp - startTime;
+      var progress = Math.min(elapsed / duration, 1);
+      window.scrollTo(0, startY + distance * ease(progress));
+      if (progress < 1) requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
+  }
+
   document.querySelectorAll('a[href^="#"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
       var target = document.querySelector(a.getAttribute('href'));
@@ -43,7 +66,10 @@
       e.preventDefault();
       var navHeight = nav ? nav.getBoundingClientRect().height : 0;
       var top = target.getBoundingClientRect().top + window.scrollY - navHeight - 16;
-      window.scrollTo({ top: top, behavior: 'smooth' });
+      var distance = Math.abs(top - window.scrollY);
+      // Scale duration with distance: min 500ms, max 900ms
+      var duration = Math.min(Math.max(distance * 0.4, 500), 900);
+      smoothScrollTo(top, duration);
     });
   });
 
