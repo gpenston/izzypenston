@@ -39,6 +39,36 @@ Visitor submits form → Cloudflare Worker creates GitHub Issue (labels: `memory
   - `POST /api/admin/approve/:id` — approve memory (PIN required)
   - `POST /api/admin/reject/:id` — dismiss memory (PIN required)
 
+## CSS Tokens
+- `--bg-primary` does NOT exist — use `--bg` (primary background) and `--bg-secondary`
+- Full token list is in `:root` at the top of `assets/style.css`
+
+## Photo Uploads (Memory Submissions)
+- Client-side resize in `assets/modal.js` — always re-encodes through canvas (even under 1000px) to enforce <1MB GitHub API limit
+- `selectedFiles[]` array maintained manually (FileList is read-only); file input has `display:none`, triggered via `<label for>`
+- Worker base64 encoding uses 8KB chunked approach to avoid CPU timeout on Cloudflare Workers
+- Photos committed to `assets/submissions/` via GitHub Contents API; failures are non-fatal (memory still submits)
+- Photo URLs stored in GitHub Issue body as `![Photo N](url)` lines after `---`; extracted by regex in both Worker and approve workflow
+- Approved memories with photos get a `photos` array in `memories.json`
+
+## Memory Cards (Public Display)
+- `assets/memories.js` — IIFE; `createPhotoPile()` and `buildMemoryLightbox()` are internal, not on window
+- Cards with photos get `has-photos` class; pile is `position: absolute; top: 20px; right: 20px` within the card
+- Memory lightbox is separate from gallery lightbox — built inline in memories.js, not reusable with lightbox.js
+
+## Gallery Captions
+- Captions stored in `assets/photos/manifest.json` — `"caption": ""` for uncaptioned photos
+- Grid: hover overlay (`.gallery-caption-text`), opacity 0 → 1 on hover
+- Lightbox: caption sits below image in `.lightbox-frame` flex column (img + caption as siblings)
+
+## Script Caching
+- Python's http.server does not set cache headers, but the browser may cache JS files across reloads
+- To force fresh JS: add/bump `?v=N` query string on the `<script src>` tag in index.html
+
+## Wrangler / Worker Deploys
+- Always run `wrangler deploy` from `worker/` subdirectory, NOT the project root (root has no wrangler.toml)
+- Running wrangler from root creates an unwanted `wrangler.jsonc` — delete it if that happens
+
 ## Parallax Story Photos
 Three full-bleed parallax image breaks in the "Their Story" section:
 - `assets/photos/story-childhood.jpg` — after early years paragraphs
