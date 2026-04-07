@@ -90,11 +90,12 @@ async function commitPhoto(arrayBuffer, index, name, env) {
   const filename = `${timestamp}-${rand}-${index + 1}.jpg`;
   const path = `assets/submissions/${filename}`;
 
-  // Convert ArrayBuffer to base64
+  // Convert ArrayBuffer to base64 using chunks to avoid O(n²) string concat
   const bytes = new Uint8Array(arrayBuffer);
+  const chunkSize = 8192;
   let binary = '';
-  for (let i = 0; i < bytes.length; i++) {
-    binary += String.fromCharCode(bytes[i]);
+  for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+    binary += String.fromCharCode.apply(null, bytes.subarray(offset, offset + chunkSize));
   }
   const base64 = btoa(binary);
 
