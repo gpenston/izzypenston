@@ -802,8 +802,17 @@ footer {
   display: block;
   width: 84px;
   height: 84px;
+  max-width: 84px;
   margin: 0 auto 28px;
   opacity: 0.6;
+}
+
+@media (max-width: 600px) {
+  .footer-star {
+    width: 64px;
+    height: 64px;
+    max-width: 64px;
+  }
 }
 
 .footer-quote {
