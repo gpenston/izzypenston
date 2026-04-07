@@ -188,7 +188,8 @@ async function handleAdminUnpublish(request, env) {
   }
 
   const fileData = await fileRes.json();
-  const content = atob(fileData.content.replace(/\n/g, ''));
+  const bytes = Uint8Array.from(atob(fileData.content.replace(/\n/g, '')), c => c.charCodeAt(0));
+  const content = new TextDecoder().decode(bytes);
   const memories = JSON.parse(content);
 
   // Find and remove the matching memory
