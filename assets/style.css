@@ -231,8 +231,6 @@ img {
   font-size: 26px;
   margin-bottom: 20px;
   max-width: 68ch;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .section p {
@@ -442,9 +440,10 @@ img {
 .timeline {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 auto;
   position: relative;
   padding-left: 32px;
+  max-width: 68ch;
 }
 
 .timeline::before {
