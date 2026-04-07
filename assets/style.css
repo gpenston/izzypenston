@@ -508,6 +508,7 @@ img {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
+  grid-auto-flow: dense;
 }
 
 .gallery-item {
