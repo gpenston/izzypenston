@@ -33,6 +33,24 @@
     text.textContent = memory.text;
     div.appendChild(text);
 
+    if (memory.photos && memory.photos.length > 0) {
+      var strip = document.createElement('div');
+      strip.className = 'memory-photos';
+      memory.photos.forEach(function (url) {
+        var a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        var img = document.createElement('img');
+        img.src = url;
+        img.alt = 'Photo shared with this memory';
+        img.loading = 'lazy';
+        a.appendChild(img);
+        strip.appendChild(a);
+      });
+      div.appendChild(strip);
+    }
+
     return div;
   }
 

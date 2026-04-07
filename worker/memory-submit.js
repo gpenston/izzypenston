@@ -52,10 +52,74 @@ async function githubFetch(path, env, options = {}) {
   return res;
 }
 
+// --- Helpers ---
+
+async function sendNotification(env, { name, relation, message, email }) {
+  if (!env.RESEND_API_KEY) return;
+  const subject = `New memory from ${name}`;
+  const relationLine = relation ? `<p><strong>Relation:</strong> ${relation}</p>` : '';
+  const html = `
+    <h2>New memory submitted on izzypenston.com</h2>
+    <p><strong>Name:</strong> ${name}</p>
+    ${relationLine}
+    <p><strong>Email:</strong> ${email}</p>
+    <blockquote style="border-left:3px solid #B34D18;margin:16px 0;padding:0 16px;color:#555;">${message.replace(/\n/g, '<br>')}</blockquote>
+    <p><a href="https://izzypenston.com/admin">Review in admin</a></p>
+  `.trim();
+  await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      from: 'memories@izzypenston.com',
+      to: ['gpenston@me.com', 'zozomay@gmail.com'],
+      subject,
+      html
+    })
+  });
+}
+
+// --- Helpers ---
+
+// Upload a photo to assets/submissions/ and return the raw GitHub URL
+async function commitPhoto(arrayBuffer, index, name, env) {
+  const timestamp = Date.now();
+  const rand = Math.random().toString(36).slice(2, 8);
+  const filename = `${timestamp}-${rand}-${index + 1}.jpg`;
+  const path = `assets/submissions/${filename}`;
+
+  // Convert ArrayBuffer to base64
+  const bytes = new Uint8Array(arrayBuffer);
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  const base64 = btoa(binary);
+
+  const res = await githubFetch(`/contents/${path}`, env, {
+    method: 'PUT',
+    body: JSON.stringify({
+      message: `Add photo from ${name}`,
+      content: base64
+    })
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    console.error('Photo commit error:', err);
+    return null;
+  }
+
+  return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${path}`;
+}
+
 // --- Handlers ---
 
 async function handleSubmit(request, env) {
   let name, email, relation, message, gotcha;
+  let photoFiles = []; // Array of { arrayBuffer, type }
 
   const contentType = request.headers.get('Content-Type') || '';
   if (contentType.includes('application/json')) {
@@ -72,6 +136,18 @@ async function handleSubmit(request, env) {
     relation = form.get('relation');
     message = form.get('message');
     gotcha = form.get('_gotcha');
+
+    // Collect up to 3 photos
+    for (let i = 0; i < 3; i++) {
+      const file = form.get('photo_' + i);
+      if (file && file instanceof File) {
+        const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        if (validTypes.includes(file.type)) {
+          const buf = await file.arrayBuffer();
+          photoFiles.push({ arrayBuffer: buf, type: file.type });
+        }
+      }
+    }
   }
 
   // Honeypot check — silently succeed for bots
@@ -84,6 +160,15 @@ async function handleSubmit(request, env) {
     return json({ ok: false, error: 'Name, email, and message are required.' }, 400);
   }
 
+  // Commit photos first (in parallel)
+  const photoUrls = [];
+  if (photoFiles.length > 0) {
+    const results = await Promise.all(
+      photoFiles.map((f, i) => commitPhoto(f.arrayBuffer, i, name, env))
+    );
+    results.forEach(url => { if (url) photoUrls.push(url); });
+  }
+
   // Build issue body
   const now = new Date().toISOString();
   let body = `**Name:** ${name}\n`;
@@ -91,6 +176,14 @@ async function handleSubmit(request, env) {
     body += `**Relation:** ${relation}\n`;
   }
   body += `\n${message}\n\n---\n_Submitted: ${now}_\n_Email: ${email}_`;
+
+  // Append photo image references after the separator
+  if (photoUrls.length > 0) {
+    body += '\n\n';
+    photoUrls.forEach((url, i) => {
+      body += `![Photo ${i + 1}](${url})\n`;
+    });
+  }
 
   // Create GitHub Issue
   const res = await githubFetch('/issues', env, {
@@ -107,6 +200,11 @@ async function handleSubmit(request, env) {
     console.error('GitHub API error:', err);
     return json({ ok: false, error: 'Failed to submit. Please try again.' }, 500);
   }
+
+  // Fire-and-forget notification — don't block the response
+  sendNotification(env, { name, relation, message, email }).catch(err => {
+    console.error('Resend error:', err);
+  });
 
   return json({ ok: true });
 }
@@ -135,11 +233,20 @@ async function handleAdminPending(env) {
       }
     }
 
+    // Extract photo URLs
+    const photoUrls = [];
+    const photoRegex = /!\[Photo \d+\]\((https:\/\/raw\.githubusercontent\.com\/[^)]+)\)/g;
+    let photoMatch;
+    while ((photoMatch = photoRegex.exec(body)) !== null) {
+      photoUrls.push(photoMatch[1]);
+    }
+
     return {
       id: issue.number,
       name: nameMatch ? nameMatch[1].trim() : 'Unknown',
       relation: relationMatch ? relationMatch[1].trim() : '',
       text: memoryLines.join('\n').trim(),
+      photos: photoUrls,
       date: issue.created_at
     };
   });

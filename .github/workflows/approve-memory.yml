@@ -55,12 +55,21 @@ jobs:
             const name = nameMatch[1].trim();
             const relation = relationMatch ? relationMatch[1].trim() : '';
 
+            // Extract photo URLs — lines like: ![Photo 1](https://raw.githubusercontent.com/...)
+            const photoUrls = [];
+            const photoRegex = /!\[Photo \d+\]\((https:\/\/raw\.githubusercontent\.com\/[^)]+)\)/g;
+            let photoMatch;
+            while ((photoMatch = photoRegex.exec(body)) !== null) {
+              photoUrls.push(photoMatch[1]);
+            }
+
             // Read existing memories
             const memoriesPath = 'assets/memories.json';
             const memories = JSON.parse(fs.readFileSync(memoriesPath, 'utf8'));
 
             // Prepend new memory (newest first)
             const newMemory = { name, relation, text: memoryText };
+            if (photoUrls.length > 0) newMemory.photos = photoUrls;
             memories.unshift(newMemory);
 
             // Write back

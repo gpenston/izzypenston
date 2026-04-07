@@ -224,6 +224,21 @@
       margin-bottom: 16px;
     }
 
+    .card-photos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .card-photos img {
+      width: 64px;
+      height: 64px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
     .card-actions {
       display: flex;
       gap: 12px;
@@ -381,6 +396,18 @@
       return div.innerHTML;
     }
 
+    function renderPhotoStrip(photos) {
+      if (!photos || photos.length === 0) return '';
+      var html = '<div class="card-photos">';
+      photos.forEach(function (url) {
+        html += '<a href="' + escHtml(url) + '" target="_blank" rel="noopener">';
+        html += '<img src="' + escHtml(url) + '" alt="Submitted photo" loading="lazy">';
+        html += '</a>';
+      });
+      html += '</div>';
+      return html;
+    }
+
     function adminFetch(path, method, body) {
       var opts = {
         method: method || 'GET',
@@ -448,6 +475,7 @@
             html += '<div class="card-relation">' + escHtml(m.relation) + '</div>';
           }
           html += '<div class="card-text">' + escHtml(m.text) + '</div>';
+          html += renderPhotoStrip(m.photos);
           html += '<div class="card-date">' + formatDate(m.date) + '</div>';
           html += '<div class="card-actions">';
           html += '<button class="btn btn-approve" data-id="' + m.id + '" data-action="approve">Approve</button>';
@@ -485,6 +513,7 @@
               html += '<div class="card-relation">' + escHtml(m.relation) + '</div>';
             }
             html += '<div class="card-text">' + escHtml(m.text) + '</div>';
+            html += renderPhotoStrip(m.photos);
             html += '<div class="card-actions" style="justify-content: flex-end;">';
             html += '<button class="btn btn-remove" data-pub-name="' + escHtml(m.name) + '" data-pub-idx="' + i + '">Remove</button>';
             html += '</div></div>';
