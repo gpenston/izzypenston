@@ -798,6 +798,15 @@ footer {
   border-top: 1px solid var(--border);
 }
 
+.footer-star {
+  display: block;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 24px;
+  opacity: 0.5;
+  color: var(--text-primary);
+}
+
 .footer-quote {
   font-family: 'Fraunces', serif;
   font-style: italic;
