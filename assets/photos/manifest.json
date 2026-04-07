@@ -1,8 +1,458 @@
 [
-  { "file": "placeholder-1.jpg", "caption": "Izzy and Maeve", "wide": true, "order": 1 },
-  { "file": "placeholder-2.jpg", "caption": "Cosplay at anime con", "wide": false, "order": 2 },
-  { "file": "placeholder-3.jpg", "caption": "", "wide": false, "order": 3 },
-  { "file": "placeholder-4.jpg", "caption": "Girls Make Games Demo Day, 2015", "wide": false, "order": 4 },
-  { "file": "placeholder-5.jpg", "caption": "Disneyland", "wide": true, "order": 5 },
-  { "file": "placeholder-6.jpg", "caption": "", "wide": false, "order": 6 }
+  {
+    "file": "gallery-001.jpg",
+    "caption": "",
+    "wide": true,
+    "order": 1
+  },
+  {
+    "file": "gallery-002.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 2
+  },
+  {
+    "file": "gallery-003.jpg",
+    "caption": "",
+    "wide": true,
+    "order": 3
+  },
+  {
+    "file": "gallery-004.jpg",
+    "caption": "",
+    "wide": true,
+    "order": 4
+  },
+  {
+    "file": "gallery-005.jpg",
+    "caption": "",
+    "wide": true,
+    "order": 5
+  },
+  {
+    "file": "gallery-006.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 6
+  },
+  {
+    "file": "gallery-007.jpg",
+    "caption": "",
+    "wide": true,
+    "order": 7
+  },
+  {
+    "file": "gallery-008.jpg",
+    "caption": "",
+    "wide": true,
+    "order": 8
+  },
+  {
+    "file": "gallery-009.jpg",
+    "caption": "",
+    "wide": true,
+    "order": 9
+  },
+  {
+    "file": "gallery-010.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 10
+  },
+  {
+    "file": "gallery-011.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 11
+  },
+  {
+    "file": "gallery-012.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 12
+  },
+  {
+    "file": "gallery-013.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 13
+  },
+  {
+    "file": "gallery-014.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 14
+  },
+  {
+    "file": "gallery-015.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 15
+  },
+  {
+    "file": "gallery-016.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 16
+  },
+  {
+    "file": "gallery-017.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 17
+  },
+  {
+    "file": "gallery-018.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 18
+  },
+  {
+    "file": "gallery-019.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 19
+  },
+  {
+    "file": "gallery-020.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 20
+  },
+  {
+    "file": "gallery-021.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 21
+  },
+  {
+    "file": "gallery-022.jpg",
+    "caption": "",
+    "wide": true,
+    "order": 22
+  },
+  {
+    "file": "gallery-023.jpg",
+    "caption": "",
+    "wide": true,
+    "order": 23
+  },
+  {
+    "file": "gallery-024.jpg",
+    "caption": "",
+    "wide": true,
+    "order": 24
+  },
+  {
+    "file": "gallery-025.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 25
+  },
+  {
+    "file": "gallery-026.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 26
+  },
+  {
+    "file": "gallery-027.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 27
+  },
+  {
+    "file": "gallery-028.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 28
+  },
+  {
+    "file": "gallery-029.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 29
+  },
+  {
+    "file": "gallery-030.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 30
+  },
+  {
+    "file": "gallery-031.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 31
+  },
+  {
+    "file": "gallery-032.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 32
+  },
+  {
+    "file": "gallery-033.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 33
+  },
+  {
+    "file": "gallery-034.jpg",
+    "caption": "",
+    "wide": true,
+    "order": 34
+  },
+  {
+    "file": "gallery-035.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 35
+  },
+  {
+    "file": "gallery-036.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 36
+  },
+  {
+    "file": "gallery-037.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 37
+  },
+  {
+    "file": "gallery-038.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 38
+  },
+  {
+    "file": "gallery-039.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 39
+  },
+  {
+    "file": "gallery-040.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 40
+  },
+  {
+    "file": "gallery-041.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 41
+  },
+  {
+    "file": "gallery-042.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 42
+  },
+  {
+    "file": "gallery-043.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 43
+  },
+  {
+    "file": "gallery-044.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 44
+  },
+  {
+    "file": "gallery-045.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 45
+  },
+  {
+    "file": "gallery-046.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 46
+  },
+  {
+    "file": "gallery-047.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 47
+  },
+  {
+    "file": "gallery-048.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 48
+  },
+  {
+    "file": "gallery-049.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 49
+  },
+  {
+    "file": "gallery-050.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 50
+  },
+  {
+    "file": "gallery-051.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 51
+  },
+  {
+    "file": "gallery-052.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 52
+  },
+  {
+    "file": "gallery-053.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 53
+  },
+  {
+    "file": "gallery-054.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 54
+  },
+  {
+    "file": "gallery-055.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 55
+  },
+  {
+    "file": "gallery-056.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 56
+  },
+  {
+    "file": "gallery-057.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 57
+  },
+  {
+    "file": "gallery-058.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 58
+  },
+  {
+    "file": "gallery-059.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 59
+  },
+  {
+    "file": "gallery-060.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 60
+  },
+  {
+    "file": "gallery-061.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 61
+  },
+  {
+    "file": "gallery-062.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 62
+  },
+  {
+    "file": "gallery-063.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 63
+  },
+  {
+    "file": "gallery-064.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 64
+  },
+  {
+    "file": "gallery-065.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 65
+  },
+  {
+    "file": "gallery-066.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 66
+  },
+  {
+    "file": "gallery-067.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 67
+  },
+  {
+    "file": "gallery-068.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 68
+  },
+  {
+    "file": "gallery-069.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 69
+  },
+  {
+    "file": "gallery-070.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 70
+  },
+  {
+    "file": "gallery-071.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 71
+  },
+  {
+    "file": "gallery-072.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 72
+  },
+  {
+    "file": "gallery-073.jpg",
+    "caption": "",
+    "wide": true,
+    "order": 73
+  },
+  {
+    "file": "gallery-074.jpg",
+    "caption": "",
+    "wide": true,
+    "order": 74
+  },
+  {
+    "file": "gallery-075.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 75
+  },
+  {
+    "file": "gallery-076.jpg",
+    "caption": "",
+    "wide": false,
+    "order": 76
+  }
 ]
