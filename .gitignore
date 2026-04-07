@@ -2,3 +2,5 @@
 .superpowers/
 worker/.wrangler/
 assets/photos/originals/
+assets/*.pxd
+assets/izzys-tattoo.png
