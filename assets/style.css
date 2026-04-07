@@ -293,7 +293,7 @@ img {
 /* ===== Story Photos (Apple-style scroll effects) ===== */
 .story-photo {
   max-width: 500px;
-  margin: 48px auto;
+  margin: 48px 0;
   perspective: 1000px;
 }
 
