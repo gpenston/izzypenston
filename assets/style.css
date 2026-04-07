@@ -503,6 +503,53 @@ img {
   line-height: 1.6;
 }
 
+/* ===== Press / Links ===== */
+.press-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 68ch;
+}
+
+.press-item {
+  border-bottom: 1px solid var(--border);
+}
+
+.press-item:last-child {
+  border-bottom: none;
+}
+
+.press-item a {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 16px 0;
+  text-decoration: none;
+  transition: padding-left 0.2s ease;
+}
+
+.press-item a:hover {
+  padding-left: 8px;
+}
+
+.press-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.press-source {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.01em;
+}
+
+.press-item a:hover .press-title {
+  color: var(--orange);
+}
+
 /* ===== Gallery ===== */
 .gallery-grid {
   display: grid;
