@@ -35,6 +35,28 @@
     }, { passive: true });
   }
 
+  // Nav active state — highlight link for the section in view
+  var navLinks = Array.from(document.querySelectorAll('.nav-links a[href^="#"]'));
+  var sections = navLinks.map(function (a) {
+    return document.querySelector(a.getAttribute('href'));
+  });
+
+  function updateActiveNav() {
+    var scrollY = window.scrollY;
+    var active = null;
+    sections.forEach(function (section, i) {
+      if (section && section.offsetTop - 100 <= scrollY) {
+        active = i;
+      }
+    });
+    navLinks.forEach(function (a, i) {
+      a.classList.toggle('is-active', i === active);
+    });
+  }
+
+  window.addEventListener('scroll', updateActiveNav, { passive: true });
+  updateActiveNav();
+
   // Story photo scroll effects (Apple-style scale, tilt, fade)
   var storyPhotos = document.querySelectorAll('.story-photo img');
   if (storyPhotos.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

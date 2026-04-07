@@ -185,10 +185,25 @@ img {
 .nav-links a {
   font-size: 14px;
   color: var(--text-secondary);
-  transition: color 0.2s;
+  text-decoration: none;
+  font-weight: 400;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, font-weight 0.2s, border-color 0.2s;
 }
 
-.nav-links a:hover { color: var(--orange); }
+.nav-links a:hover,
+.nav-links a:focus-visible {
+  color: var(--orange);
+  font-weight: 600;
+  border-bottom-color: var(--orange);
+}
+
+.nav-links a.is-active {
+  color: var(--text-primary);
+  font-weight: 600;
+  border-bottom-color: var(--orange);
+}
 
 /* ===== Section ===== */
 .section {
