@@ -772,7 +772,6 @@ img {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  line-height: 1;
   padding: 8px 14px;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
@@ -789,8 +788,9 @@ img {
 }
 
 .form-input-file-label svg {
-  display: block;
   flex-shrink: 0;
+  position: relative;
+  top: 1px;
 }
 
 .form-hint-inline {
