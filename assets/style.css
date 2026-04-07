@@ -650,7 +650,7 @@ img {
   height: 72px;
   object-fit: cover;
   border-radius: 8px;
-  border: 2px solid var(--bg-primary);
+  border: 2px solid var(--bg);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
@@ -948,20 +948,23 @@ img {
   position: absolute;
   top: -6px;
   right: -6px;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: var(--text-primary);
-  color: var(--bg-primary);
+  color: var(--bg);
   border: none;
-  font-size: 12px;
-  line-height: 18px;
-  text-align: center;
   cursor: pointer;
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.photo-preview-remove svg {
+  width: 10px;
+  height: 10px;
+  display: block;
 }
 
 /* ===== Donate ===== */

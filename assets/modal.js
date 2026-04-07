@@ -56,7 +56,7 @@
       removeBtn.type = 'button';
       removeBtn.className = 'photo-preview-remove';
       removeBtn.setAttribute('aria-label', 'Remove photo');
-      removeBtn.textContent = '×';
+      removeBtn.innerHTML = '<svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg>';
       removeBtn.addEventListener('click', function () {
         selectedFiles.splice(i, 1);
         renderPreviews();
