@@ -690,8 +690,8 @@ img {
   left: -8px;
   z-index: 10;
   color: var(--text-tertiary);
-  width: 22px;
-  height: 22px;
+  width: 16px;
+  height: 16px;
   pointer-events: none;
 }
 
