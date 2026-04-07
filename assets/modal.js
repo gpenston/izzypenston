@@ -10,7 +10,8 @@
   var previewsEl = document.getElementById('memory-photo-previews');
   var triggerEl = null;
 
-  // Resize an image file to max 1000px on longest side, returns a Promise<Blob>
+  // Resize an image to max 1000px on longest side and re-encode as JPEG.
+  // Always re-encodes (even if already small) to ensure file size stays under GitHub's 1MB API limit.
   function resizeImage(file) {
     return new Promise(function (resolve) {
       var url = URL.createObjectURL(file);
@@ -20,18 +21,13 @@
         var maxDim = 1000;
         var w = img.naturalWidth;
         var h = img.naturalHeight;
-        if (w <= maxDim && h <= maxDim) {
-          // No resize needed — return original as blob
-          resolve(file);
-          return;
-        }
-        var scale = Math.min(maxDim / w, maxDim / h);
+        var scale = (w > maxDim || h > maxDim) ? Math.min(maxDim / w, maxDim / h) : 1;
         var canvas = document.createElement('canvas');
         canvas.width = Math.round(w * scale);
         canvas.height = Math.round(h * scale);
         var ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob(function (blob) { resolve(blob); }, 'image/jpeg', 0.85);
+        canvas.toBlob(function (blob) { resolve(blob || file); }, 'image/jpeg', 0.85);
       };
       img.onerror = function () { URL.revokeObjectURL(url); resolve(file); };
       img.src = url;
