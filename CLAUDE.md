@@ -43,6 +43,12 @@ Visitor submits form → Cloudflare Worker creates GitHub Issue (labels: `memory
 - `--bg-primary` does NOT exist — use `--bg` (primary background) and `--bg-secondary`
 - Full token list is in `:root` at the top of `assets/style.css`
 
+## Press / Links Section
+- `<section id="press">` between milestones and photos — no nav item, part of story flow
+- Inline HTML (not JSON) — ~10 static links, rarely changing
+- Each `<li class="press-item">` wraps an `<a>` containing `.press-title` (Fraunces) + `.press-source`
+- To add a link: copy an existing `<li>` in the `<ul class="press-list">`, update href/title/source
+
 ## Photo Uploads (Memory Submissions)
 - Client-side resize in `assets/modal.js` — always re-encodes through canvas (even under 1000px) to enforce <1MB GitHub API limit
 - `selectedFiles[]` array maintained manually (FileList is read-only); file input has `display:none`, triggered via `<label for>`
