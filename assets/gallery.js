@@ -53,7 +53,7 @@
   function init() {
     if (!grid) return;
 
-    fetch('/assets/photos/manifest.json')
+    fetch('/assets/photos/manifest.json?v=' + Date.now())
       .then(function (r) { return r.json(); })
       .then(function (data) {
         photos = data.sort(function (a, b) { return a.order - b.order; });
