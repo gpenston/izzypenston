@@ -224,12 +224,12 @@ img {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-tertiary);
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .section h2 {
   font-size: 26px;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
   max-width: 68ch;
 }
 
