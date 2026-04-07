@@ -35,6 +35,18 @@
     }, { passive: true });
   }
 
+  // Smooth scroll with nav offset for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var target = document.querySelector(a.getAttribute('href'));
+      if (!target) return;
+      e.preventDefault();
+      var navHeight = nav ? nav.getBoundingClientRect().height : 0;
+      var top = target.getBoundingClientRect().top + window.scrollY - navHeight - 16;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    });
+  });
+
   // Nav active state — highlight link for the section in view
   var navLinks = Array.from(document.querySelectorAll('.nav-links a[href^="#"]'));
   var sections = navLinks.map(function (a) {
