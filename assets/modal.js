@@ -10,6 +10,9 @@
   var previewsEl = document.getElementById('memory-photo-previews');
   var triggerEl = null;
 
+  // Mutable array of selected File objects (replaces read-only FileList)
+  var selectedFiles = [];
+
   // Resize an image to max 1000px on longest side and re-encode as JPEG.
   // Always re-encodes (even if already small) to ensure file size stays under GitHub's 1MB API limit.
   function resizeImage(file) {
@@ -34,22 +37,48 @@
     });
   }
 
-  // Show thumbnail previews when files are selected
+  // Render preview thumbnails with × remove buttons
+  function renderPreviews() {
+    if (!previewsEl) return;
+    previewsEl.innerHTML = '';
+    selectedFiles.forEach(function (file, i) {
+      var url = URL.createObjectURL(file);
+      var wrap = document.createElement('div');
+      wrap.className = 'photo-preview-item';
+
+      var img = document.createElement('img');
+      img.src = url;
+      img.alt = '';
+      img.onload = function () { URL.revokeObjectURL(url); };
+      wrap.appendChild(img);
+
+      var removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'photo-preview-remove';
+      removeBtn.setAttribute('aria-label', 'Remove photo');
+      removeBtn.textContent = '×';
+      removeBtn.addEventListener('click', function () {
+        selectedFiles.splice(i, 1);
+        renderPreviews();
+      });
+      wrap.appendChild(removeBtn);
+
+      previewsEl.appendChild(wrap);
+    });
+  }
+
+  // Handle new file selections — add to selectedFiles (max 3)
   if (photosInput && previewsEl) {
     photosInput.addEventListener('change', function () {
-      previewsEl.innerHTML = '';
-      var files = Array.from(photosInput.files).slice(0, 3);
-      files.forEach(function (file) {
-        var url = URL.createObjectURL(file);
-        var wrap = document.createElement('div');
-        wrap.className = 'photo-preview-item';
-        var img = document.createElement('img');
-        img.src = url;
-        img.alt = '';
-        img.onload = function () { URL.revokeObjectURL(url); };
-        wrap.appendChild(img);
-        previewsEl.appendChild(wrap);
+      var incoming = Array.from(photosInput.files);
+      incoming.forEach(function (file) {
+        if (selectedFiles.length < 3) {
+          selectedFiles.push(file);
+        }
       });
+      // Reset input so the same file can be selected again later if removed
+      photosInput.value = '';
+      renderPreviews();
     });
   }
 
@@ -58,7 +87,7 @@
     triggerEl = document.activeElement;
     backdrop.classList.add('is-open');
     document.body.style.overflow = 'hidden';
-    var firstInput = modal.querySelector('input:not([type="hidden"]):not([style*="display:none"]):not([type="file"])');
+    var firstInput = modal.querySelector('input:not([type="hidden"]):not([type="file"])');
     if (firstInput) firstInput.focus();
   }
 
@@ -100,21 +129,18 @@
     e.preventDefault();
     var data = new FormData(form);
 
-    // Gather up to 3 selected photo files
-    var photoFiles = photosInput ? Array.from(photosInput.files).slice(0, 3) : [];
-
     // Validate size before processing
-    for (var fi = 0; fi < photoFiles.length; fi++) {
-      if (photoFiles[fi].size > 20 * 1024 * 1024) {
+    for (var fi = 0; fi < selectedFiles.length; fi++) {
+      if (selectedFiles[fi].size > 20 * 1024 * 1024) {
         alert('Each photo must be under 20 MB. Please choose smaller images.');
         return;
       }
     }
 
-    // Remove the raw file input from FormData (we'll add resized versions)
+    // Remove raw file input from FormData; we'll append resized blobs
     data.delete('photos');
 
-    var resizePromises = photoFiles.map(function (file) { return resizeImage(file); });
+    var resizePromises = selectedFiles.map(function (file) { return resizeImage(file); });
 
     Promise.all(resizePromises).then(function (blobs) {
       blobs.forEach(function (blob, i) {
@@ -131,6 +157,7 @@
           formState.style.display = 'none';
           thanksState.style.display = '';
           modal.setAttribute('aria-labelledby', 'modal-thanks-title');
+          selectedFiles = [];
           if (previewsEl) previewsEl.innerHTML = '';
           setTimeout(function () {
             close();

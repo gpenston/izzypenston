@@ -623,29 +623,159 @@ img {
   margin: 0;
 }
 
-.memory-photos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 12px;
+/* ===== Memory photo pile ===== */
+.memory-photo-pile {
+  display: inline-block;
+  position: relative;
+  margin-top: 14px;
+  cursor: pointer;
+  user-select: none;
 }
 
-.memory-photos a {
-  display: block;
-  flex-shrink: 0;
+.pile-stack {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  transition: transform 0.15s;
 }
 
-.memory-photos img {
+.memory-photo-pile:hover .pile-stack {
+  transform: translateY(-2px);
+}
+
+.pile-img {
+  position: absolute;
+  inset: 0;
   width: 72px;
   height: 72px;
   object-fit: cover;
-  border-radius: 6px;
-  display: block;
-  transition: opacity 0.15s;
+  border-radius: 8px;
+  border: 2px solid var(--bg-primary);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-.memory-photos a:hover img {
-  opacity: 0.85;
+/* Back photo */
+.pile-img:nth-child(1) {
+  transform: rotate(-7deg) translate(-5px, 3px);
+  z-index: 1;
+}
+
+/* Middle photo */
+.pile-img:nth-child(2) {
+  transform: rotate(3deg) translate(3px, -2px);
+  z-index: 2;
+}
+
+/* Front photo */
+.pile-img:nth-child(3) {
+  transform: none;
+  z-index: 3;
+}
+
+/* When only 1 photo, it's the only child */
+.pile-img:only-child {
+  transform: none;
+  z-index: 3;
+}
+
+.pile-clip {
+  position: absolute;
+  top: -12px;
+  left: -8px;
+  z-index: 10;
+  color: var(--text-tertiary);
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+}
+
+.pile-label {
+  display: block;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 8px;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+/* ===== Memory lightbox ===== */
+.mlb-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+
+.mlb-backdrop.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mlb-img {
+  max-width: min(90vw, 900px);
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 4px;
+  display: block;
+}
+
+.mlb-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.7;
+  padding: 4px 8px;
+}
+
+.mlb-close:hover { opacity: 1; }
+
+.mlb-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.12);
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+}
+
+.mlb-nav:hover { opacity: 1; background: rgba(255,255,255,0.2); }
+.mlb-nav.prev { left: 16px; }
+.mlb-nav.next { right: 16px; }
+.mlb-nav[hidden] { display: none; }
+
+.mlb-counter {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255,255,255,0.6);
+  font-size: 13px;
+  letter-spacing: 0.05em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mlb-backdrop { transition: none; }
 }
 
 /* ===== Modal ===== */
@@ -801,6 +931,10 @@ img {
   margin-top: 10px;
 }
 
+.photo-preview-item {
+  position: relative;
+}
+
 .photo-preview-item img {
   width: 72px;
   height: 72px;
@@ -808,6 +942,26 @@ img {
   border-radius: 6px;
   display: block;
   border: 1px solid var(--border);
+}
+
+.photo-preview-remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  border: none;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ===== Donate ===== */
