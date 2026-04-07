@@ -5,3 +5,10 @@ assets/photos/originals/
 assets/*.pxd
 assets/izzys-tattoo.png
 assets/izzys-tattoo2.png
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example

@@ -160,13 +160,18 @@ async function handleSubmit(request, env) {
     return json({ ok: false, error: 'Name, email, and message are required.' }, 400);
   }
 
-  // Commit photos first (in parallel)
+  // Commit photos first (in parallel) — failures are non-fatal
   const photoUrls = [];
   if (photoFiles.length > 0) {
-    const results = await Promise.all(
-      photoFiles.map((f, i) => commitPhoto(f.arrayBuffer, i, name, env))
-    );
-    results.forEach(url => { if (url) photoUrls.push(url); });
+    try {
+      const results = await Promise.all(
+        photoFiles.map((f, i) => commitPhoto(f.arrayBuffer, i, name, env))
+      );
+      results.forEach(url => { if (url) photoUrls.push(url); });
+    } catch (err) {
+      console.error('Photo upload error:', err);
+      // Continue — submit the memory without photos
+    }
   }
 
   // Build issue body
