@@ -1,7 +1,7 @@
 [
   {
     "file": "gallery-001.jpg",
-    "caption": "",
+    "caption": "Izzy at the beach, summer 2019",
     "wide": true,
     "order": 1
   },
@@ -13,7 +13,7 @@
   },
   {
     "file": "gallery-003.jpg",
-    "caption": "",
+    "caption": "ACLC theater production, junior year",
     "wide": true,
     "order": 3
   },
@@ -25,7 +25,7 @@
   },
   {
     "file": "gallery-005.jpg",
-    "caption": "",
+    "caption": "Game night with the family, Thanksgiving 2021",
     "wide": true,
     "order": 5
   },
@@ -43,7 +43,7 @@
   },
   {
     "file": "gallery-008.jpg",
-    "caption": "",
+    "caption": "Performing at the school talent show",
     "wide": true,
     "order": 8
   },
@@ -55,7 +55,7 @@
   },
   {
     "file": "gallery-010.jpg",
-    "caption": "",
+    "caption": "Izzy and Maeve",
     "wide": false,
     "order": 10
   },
@@ -127,7 +127,7 @@
   },
   {
     "file": "gallery-022.jpg",
-    "caption": "",
+    "caption": "Senior trip, May 2022 — Izzy's favorite day that whole year",
     "wide": true,
     "order": 22
   },

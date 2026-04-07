@@ -539,10 +539,11 @@ img {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 24px 12px 10px;
-  background: linear-gradient(transparent, rgba(0,0,0,0.6));
+  padding: 36px 12px 10px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.72));
   color: white;
-  font-size: 12px;
+  font-size: 13px;
+  line-height: 1.4;
   opacity: 0;
   transition: opacity 0.2s;
 }
@@ -1114,22 +1115,29 @@ footer {
   visibility: visible;
 }
 
+.lightbox-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 90vh;
+  gap: 12px;
+}
+
 .lightbox-img {
   max-width: 90vw;
-  max-height: 85vh;
+  max-height: 80vh;
   object-fit: contain;
   border-radius: 4px;
+  display: block;
 }
 
 .lightbox-caption {
-  position: absolute;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: white;
-  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
   text-align: center;
-  max-width: 500px;
+  max-width: min(500px, 85vw);
+  line-height: 1.5;
+  letter-spacing: 0.01em;
 }
 
 .lightbox-close {

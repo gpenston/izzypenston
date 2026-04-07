@@ -33,11 +33,15 @@
     caption.className = 'lightbox-caption';
     caption.setAttribute('aria-live', 'polite');
 
+    var frame = document.createElement('div');
+    frame.className = 'lightbox-frame';
+    frame.appendChild(img);
+    frame.appendChild(caption);
+
     backdrop.appendChild(closeBtn);
     backdrop.appendChild(prevBtn);
-    backdrop.appendChild(img);
+    backdrop.appendChild(frame);
     backdrop.appendChild(nextBtn);
-    backdrop.appendChild(caption);
     document.body.appendChild(backdrop);
 
     closeBtn.addEventListener('click', close);
