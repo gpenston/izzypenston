@@ -257,6 +257,16 @@ img {
   color: white;
 }
 
+.btn-submit {
+  display: flex;
+  width: fit-content;
+  margin: 0 auto;
+  gap: 8px;
+  padding: 13px 28px;
+  font-size: 16px;
+  border-radius: 12px;
+}
+
 .btn-secondary {
   display: inline-flex;
   align-items: center;
