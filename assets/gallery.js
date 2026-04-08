@@ -11,7 +11,7 @@
     div.setAttribute('data-index', photos.indexOf(photo));
     div.setAttribute('role', 'button');
     div.setAttribute('tabindex', '0');
-    div.setAttribute('aria-label', photo.caption || 'Photo of Izzy');
+    div.setAttribute('aria-label', photo.caption || ('Photo ' + (photos.indexOf(photo) + 1) + ' of Izzy'));
 
     var img = document.createElement('img');
     img.src = '/assets/photos/' + photo.file;

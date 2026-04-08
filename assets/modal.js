@@ -48,7 +48,7 @@
 
       var img = document.createElement('img');
       img.src = url;
-      img.alt = '';
+      img.alt = 'Preview of selected photo';
       img.onload = function () { URL.revokeObjectURL(url); };
       wrap.appendChild(img);
 
@@ -127,6 +127,7 @@
 
   function handleSubmit(e) {
     e.preventDefault();
+    var submitBtn = form.querySelector('button[type="submit"]');
     var data = new FormData(form);
 
     // Validate size before processing
@@ -136,6 +137,9 @@
         return;
       }
     }
+
+    // Prevent double-submit
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending\u2026'; }
 
     // Remove raw file input from FormData; we'll append resized blobs
     data.delete('photos');
@@ -166,13 +170,16 @@
               thanksState.style.display = 'none';
               modal.setAttribute('aria-labelledby', 'modal-title');
               form.reset();
+              if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Share Memory'; }
             }, 300);
           }, 3000);
         } else {
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Share Memory'; }
           alert('Something went wrong. Please try again or email your memory to memories@izzypenston.com.');
         }
       })
       .catch(function () {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Share Memory'; }
         alert('Something went wrong. Please try again or email your memory to memories@izzypenston.com.');
       });
     });

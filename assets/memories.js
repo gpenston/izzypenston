@@ -43,6 +43,7 @@
 
     var counter = document.createElement('div');
     counter.className = 'mlb-counter';
+    counter.setAttribute('aria-live', 'polite');
     wrap.appendChild(counter);
 
     document.body.appendChild(wrap);
@@ -83,6 +84,20 @@
       if (e.key === 'Escape') closeLightbox();
       if (e.key === 'ArrowLeft' && mlbIndex > 0) showAt(mlbIndex - 1);
       if (e.key === 'ArrowRight' && mlbIndex < mlbPhotos.length - 1) showAt(mlbIndex + 1);
+
+      // Focus trap
+      if (e.key === 'Tab') {
+        var focusable = wrap.querySelectorAll('button:not([hidden])');
+        var els = Array.prototype.filter.call(focusable, function (el) { return !el.hidden; });
+        if (!els.length) return;
+        var first = els[0];
+        var last = els[els.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      }
     });
 
     return openLightbox;
@@ -207,6 +222,7 @@
         }
       })
       .catch(function () {
+        if (list) list.innerHTML = '<p style="color:var(--text-tertiary);text-align:center;">Memories could not be loaded. Please try again later.</p>';
         if (btnWrap) btnWrap.style.display = 'none';
       });
 

@@ -382,7 +382,7 @@
       <h2>Memory Admin</h2>
       <p>Enter PIN to review submitted memories.</p>
       <div class="pin-error" id="pin-error">Incorrect PIN. Try again.</div>
-      <input type="password" class="pin-input" id="pin-input" maxlength="10" inputmode="numeric" autocomplete="off" placeholder="PIN">
+      <input type="password" class="pin-input" id="pin-input" maxlength="10" inputmode="numeric" autocomplete="off" placeholder="PIN" aria-label="PIN">
       <br>
       <button class="pin-btn" id="pin-btn" type="button">Enter</button>
     </div>
@@ -646,7 +646,6 @@
     }
 
     // Store published memories for unpublish lookup
-    var publishedMemories = [];
 
     function handleRemove(btn) {
       // Show confirmation inline

@@ -58,6 +58,20 @@
     if (e.key === 'Escape') close();
     if (e.key === 'ArrowLeft') navigate(-1);
     if (e.key === 'ArrowRight') navigate(1);
+
+    // Focus trap
+    if (e.key === 'Tab') {
+      var focusable = backdrop.querySelectorAll('button:not([style*="display: none"])');
+      var els = Array.prototype.filter.call(focusable, function (el) { return el.style.display !== 'none'; });
+      if (!els.length) return;
+      var first = els[0];
+      var last = els[els.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
   }
 
   function show(index) {

@@ -59,6 +59,8 @@
     requestAnimationFrame(step);
   }
 
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
   document.querySelectorAll('a[href^="#"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
       var target = document.querySelector(a.getAttribute('href'));
@@ -66,6 +68,10 @@
       e.preventDefault();
       var navHeight = nav ? nav.getBoundingClientRect().height : 0;
       var top = target.getBoundingClientRect().top + window.scrollY - navHeight - 16;
+      if (prefersReducedMotion.matches) {
+        window.scrollTo(0, top);
+        return;
+      }
       var distance = Math.abs(top - window.scrollY);
       // Scale duration with distance: min 500ms, max 900ms
       var duration = Math.min(Math.max(distance * 0.4, 500), 900);
