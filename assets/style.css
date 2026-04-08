@@ -385,17 +385,17 @@ img {
 }
 
 .hero-photo {
-  width: 180px;
-  min-width: 180px;
-  height: 220px;
+  width: 300px;
+  min-width: 300px;
+  height: 360px;
   border-radius: 16px;
   object-fit: cover;
 }
 
 .hero-photo-placeholder {
-  width: 180px;
-  min-width: 180px;
-  height: 220px;
+  width: 300px;
+  min-width: 300px;
+  height: 360px;
   border-radius: 16px;
   background: linear-gradient(135deg, #E8D5C0 0%, #C9B8A5 50%, #B8A898 100%);
   display: flex;
@@ -1326,9 +1326,10 @@ footer {
 
   .hero-photo,
   .hero-photo-placeholder {
-    width: 140px;
-    min-width: 140px;
-    height: 170px;
+    width: min(280px, 75vw);
+    min-width: unset;
+    height: auto;
+    aspect-ratio: 5 / 6;
   }
 
   .gallery-grid {
