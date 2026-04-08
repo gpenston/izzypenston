@@ -454,5 +454,11 @@
     "caption": "Izzy's 25th birthday",
     "wide": false,
     "order": 77
+  },
+  {
+    "file": "gallery-078.jpg",
+    "caption": "Family day at the beach",
+    "wide": true,
+    "order": 78
   }
 ]
