@@ -183,11 +183,25 @@ img {
 
 .nav-wordmark span { color: var(--orange); }
 
+.nav-wordmark:hover {
+  color: var(--orange);
+}
+
 .nav-star {
   width: 14px;
   height: 14px;
   color: var(--orange);
   flex-shrink: 0;
+  transition: fill 0.2s ease;
+}
+
+.nav-star polygon {
+  fill: none;
+  transition: fill 0.2s ease;
+}
+
+.nav-wordmark:hover .nav-star polygon {
+  fill: var(--orange);
 }
 
 .nav-links {
