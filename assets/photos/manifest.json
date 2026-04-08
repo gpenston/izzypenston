@@ -442,5 +442,17 @@
     "caption": "",
     "wide": false,
     "order": 75
+  },
+  {
+    "file": "gallery-076.jpg",
+    "caption": "Spa day with Zoe",
+    "wide": false,
+    "order": 76
+  },
+  {
+    "file": "gallery-077.jpg",
+    "caption": "Izzy's 25th birthday",
+    "wide": false,
+    "order": 77
   }
 ]
