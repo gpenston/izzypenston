@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Izzy Penston — Caption Editor</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Albert+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange: #B34D18;
+      --green: #2D8A4E;
+      --bg: #FAF7F2;
+      --bg-secondary: #F0EBE3;
+      --text-primary: #1E1B18;
+      --text-secondary: #6B6560;
+      --text-tertiary: #6E6966;
+      --border: #E0DBD4;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --orange: #E07A3A;
+        --green: #3FB96A;
+        --bg: #141210;
+        --bg-secondary: #1E1B18;
+        --text-primary: #F2EDE6;
+        --text-secondary: #A39E98;
+        --text-tertiary: #908B85;
+        --border: #2A2520;
+      }
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Albert Sans', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 10;
+    }
+
+    .header h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      font-family: 'Albert Sans', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 8px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-save {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-copy {
+      background: var(--orange);
+      color: white;
+    }
+
+    .change-count {
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .intro {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .photo-row {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .photo-row:last-child {
+      border-bottom: none;
+    }
+
+    .photo-thumb {
+      width: 120px;
+      min-width: 120px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: var(--bg-secondary);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .photo-thumb:hover {
+      transform: scale(1.05);
+    }
+
+    .photo-thumb.wide {
+      width: 160px;
+      min-width: 160px;
+    }
+
+    .photo-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .photo-file {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      font-family: monospace;
+    }
+
+    .caption-input {
+      font-family: 'Albert Sans', sans-serif;
+      font-size: 15px;
+      padding: 8px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      width: 100%;
+      transition: border-color 0.2s;
+    }
+
+    .caption-input:focus {
+      outline: none;
+      border-color: var(--orange);
+    }
+
+    .caption-input.changed {
+      border-color: var(--green);
+      background: color-mix(in srgb, var(--green) 5%, var(--bg-secondary));
+    }
+
+    .loading {
+      text-align: center;
+      color: var(--text-tertiary);
+      padding: 60px 0;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--green);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 100;
+    }
+
+    .toast.show { opacity: 1; }
+
+    @media (max-width: 600px) {
+      .photo-row { flex-direction: column; }
+      .photo-thumb, .photo-thumb.wide { width: 100%; min-width: unset; height: 200px; }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .btn-save, .btn-copy { color: #1E1B18; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Caption Editor</h1>
+    <div class="header-actions">
+      <span class="change-count" id="change-count"></span>
+      <button class="btn btn-copy" id="btn-copy" style="display:none">Copy JSON</button>
+      <button class="btn btn-save" id="btn-save" style="display:none">Download manifest.json</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <p class="intro">Edit captions below. Changed fields turn green. When you're done, download the updated manifest.json and replace the one in the project, or copy the JSON to your clipboard.</p>
+    <div id="grid">
+      <div class="loading">Loading photos&hellip;</div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+  (function () {
+    var manifest = [];
+    var originals = {};
+    var grid = document.getElementById('grid');
+    var btnSave = document.getElementById('btn-save');
+    var btnCopy = document.getElementById('btn-copy');
+    var changeCount = document.getElementById('change-count');
+    var toast = document.getElementById('toast');
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(function () { toast.classList.remove('show'); }, 2500);
+    }
+
+    function countChanges() {
+      var count = 0;
+      for (var i = 0; i < manifest.length; i++) {
+        var input = document.getElementById('caption-' + i);
+        if (input && input.value !== originals[i]) {
+          count++;
+          input.classList.add('changed');
+        } else if (input) {
+          input.classList.remove('changed');
+        }
+      }
+      changeCount.textContent = count > 0 ? count + ' changed' : '';
+      btnSave.style.display = count > 0 ? '' : 'none';
+      btnCopy.style.display = count > 0 ? '' : 'none';
+    }
+
+    function getUpdatedManifest() {
+      var updated = JSON.parse(JSON.stringify(manifest));
+      for (var i = 0; i < updated.length; i++) {
+        var input = document.getElementById('caption-' + i);
+        if (input) updated[i].caption = input.value;
+      }
+      return updated;
+    }
+
+    function renderGrid() {
+      var html = '';
+      for (var i = 0; i < manifest.length; i++) {
+        var m = manifest[i];
+        originals[i] = m.caption;
+        html += '<div class="photo-row">';
+        html += '<img class="photo-thumb' + (m.wide ? ' wide' : '') + '" src="/assets/photos/' + m.file + '" alt="" loading="lazy" onclick="window.open(\'/assets/photos/' + m.file + '\', \'_blank\')">';
+        html += '<div class="photo-info">';
+        html += '<div class="photo-file">' + m.file + (m.wide ? ' &bull; wide' : '') + '</div>';
+        html += '<input class="caption-input" id="caption-' + i + '" type="text" value="' + (m.caption || '').replace(/"/g, '&quot;') + '" placeholder="Add a caption&hellip;">';
+        html += '</div></div>';
+      }
+      grid.innerHTML = html;
+
+      grid.addEventListener('input', function (e) {
+        if (e.target.classList.contains('caption-input')) countChanges();
+      });
+    }
+
+    btnSave.addEventListener('click', function () {
+      var updated = getUpdatedManifest();
+      var blob = new Blob([JSON.stringify(updated, null, 2) + '\n'], { type: 'application/json' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'manifest.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+      showToast('Downloaded! Replace assets/photos/manifest.json with this file.');
+    });
+
+    btnCopy.addEventListener('click', function () {
+      var updated = getUpdatedManifest();
+      var text = JSON.stringify(updated, null, 2) + '\n';
+      navigator.clipboard.writeText(text).then(function () {
+        showToast('Copied to clipboard!');
+      });
+    });
+
+    fetch('/assets/photos/manifest.json?v=' + Date.now())
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        manifest = data;
+        renderGrid();
+      })
+      .catch(function () {
+        grid.innerHTML = '<div class="loading">Could not load manifest.json</div>';
+      });
+  }());
+  </script>
+</body>
+</html>
