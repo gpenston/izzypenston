@@ -243,6 +243,16 @@ img {
 /* ===== Section ===== */
 .section {
   padding: 72px 0;
+}
+
+@media (max-width: 600px) {
+  .section {
+    padding: 56px 0 48px;
+  }
+  .section + .section {
+    padding-top: 40px;
+  }
+}
   border-bottom: 1px solid var(--border);
 }
 
