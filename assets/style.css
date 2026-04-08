@@ -167,6 +167,9 @@ img {
 }
 
 .nav-wordmark {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-family: 'Fraunces', serif;
   font-weight: 700;
   font-size: 16px;
@@ -175,6 +178,13 @@ img {
 }
 
 .nav-wordmark span { color: var(--orange); }
+
+.nav-star {
+  width: 14px;
+  height: 14px;
+  color: var(--orange);
+  flex-shrink: 0;
+}
 
 .nav-links {
   display: flex;
