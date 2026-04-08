@@ -1,7 +1,7 @@
 [
   {
     "file": "gallery-001.jpg",
-    "caption": "Izzy at the beach, summer 2019",
+    "caption": "Baby Izzy and Zoe",
     "wide": true,
     "order": 1
   },
@@ -13,7 +13,7 @@
   },
   {
     "file": "gallery-003.jpg",
-    "caption": "ACLC theater production, junior year",
+    "caption": "Bundled up at the playground",
     "wide": true,
     "order": 3
   },
@@ -25,7 +25,7 @@
   },
   {
     "file": "gallery-005.jpg",
-    "caption": "Game night with the family, Thanksgiving 2021",
+    "caption": "Little sunflower",
     "wide": true,
     "order": 5
   },
@@ -43,7 +43,7 @@
   },
   {
     "file": "gallery-008.jpg",
-    "caption": "Performing at the school talent show",
+    "caption": "Those blue eyes",
     "wide": true,
     "order": 8
   },
@@ -55,7 +55,7 @@
   },
   {
     "file": "gallery-010.jpg",
-    "caption": "Izzy and Maeve",
+    "caption": "Tiara and feather boa \u2014 ready for anything",
     "wide": false,
     "order": 10
   },
@@ -127,7 +127,7 @@
   },
   {
     "file": "gallery-022.jpg",
-    "caption": "Senior trip, May 2022 \u2014 Izzy\u2019s favorite day that whole year",
+    "caption": "Izzy and Wendy being goofballs",
     "wide": true,
     "order": 22
   },
