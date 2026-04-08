@@ -116,10 +116,41 @@ async function commitPhoto(arrayBuffer, index, name, env) {
   return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${path}`;
 }
 
+// --- Spam detection ---
+
+function isSpam({ name, relation, message, website }) {
+  // Honeypot: real users never fill this field
+  if (website) return true;
+
+  const allText = [name, relation, message].filter(Boolean).join(' ');
+
+  // Block any URLs in submission text — real memories almost never contain links
+  if (/https?:\/\/|www\./i.test(allText)) return true;
+
+  // Block known spam keyword patterns
+  const spamPatterns = [
+    /\bseo\b/i,
+    /\b1st page\b/i,
+    /first page of google/i,
+    /search engine optim/i,
+    /\bbacklink/i,
+    /price list/i,
+    /seo packages?/i,
+    /google ranking/i,
+    /place your (website|site)/i,
+    /make money/i,
+    /earn money/i,
+    /\bcasino\b/i,
+    /\bcrypto\b.*(invest|profit|earn)/i,
+  ];
+
+  return spamPatterns.some(p => p.test(allText));
+}
+
 // --- Handlers ---
 
 async function handleSubmit(request, env) {
-  let name, email, relation, message, gotcha;
+  let name, email, relation, message, website;
   let photoFiles = []; // Array of { arrayBuffer, type }
 
   const contentType = request.headers.get('Content-Type') || '';
@@ -129,14 +160,14 @@ async function handleSubmit(request, env) {
     email = body.email;
     relation = body.relation;
     message = body.message;
-    gotcha = body._gotcha;
+    website = body.website;
   } else {
     const form = await request.formData();
     name = form.get('name');
     email = form.get('email');
     relation = form.get('relation');
     message = form.get('message');
-    gotcha = form.get('_gotcha');
+    website = form.get('website');
 
     // Collect up to 3 photos
     for (let i = 0; i < 3; i++) {
@@ -151,8 +182,8 @@ async function handleSubmit(request, env) {
     }
   }
 
-  // Honeypot check — silently succeed for bots
-  if (gotcha) {
+  // Spam check — silently succeed so bots don't retry with different content
+  if (isSpam({ name, relation, message, website })) {
     return json({ ok: true });
   }
 
