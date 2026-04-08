@@ -519,6 +519,25 @@ img {
   border-bottom: none;
 }
 
+@media (min-width: 640px) {
+  .press-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 100%;
+    column-gap: 48px;
+  }
+
+  /* Remove border from both items in the last row */
+  .press-item:nth-last-child(-n+2) {
+    border-bottom: none;
+  }
+
+  /* Restore border on last-child override from mobile */
+  .press-item:last-child {
+    border-bottom: none;
+  }
+}
+
 .press-item a {
   display: flex;
   flex-direction: column;
