@@ -307,6 +307,14 @@
       padding: 10px 20px;
     }
 
+    .btn-restore {
+      background: transparent;
+      border: 1.5px solid var(--green);
+      color: var(--green);
+      flex: none;
+      padding: 10px 20px;
+    }
+
     .status-msg {
       text-align: center;
       padding: 12px;
@@ -380,10 +388,12 @@
       <div class="tabs">
         <button class="tab active" id="tab-pending" data-tab="pending">Pending <span class="tab-count" id="pending-count"></span></button>
         <button class="tab" id="tab-published" data-tab="published">Published <span class="tab-count" id="published-count"></span></button>
+        <button class="tab" id="tab-archived" data-tab="archived">Archived <span class="tab-count" id="archived-count"></span></button>
       </div>
       <div id="status"></div>
       <div id="pending-panel"></div>
       <div id="published-panel" style="display:none"></div>
+      <div id="archived-panel" style="display:none"></div>
     </div>
   </div>
 
@@ -402,10 +412,13 @@
     var pendingPanel = document.getElementById('pending-panel');
     var publishedPanel = document.getElementById('published-panel');
     var status = document.getElementById('status');
+    var archivedPanel = document.getElementById('archived-panel');
     var tabPending = document.getElementById('tab-pending');
     var tabPublished = document.getElementById('tab-published');
+    var tabArchived = document.getElementById('tab-archived');
     var pendingCount = document.getElementById('pending-count');
     var publishedCount = document.getElementById('published-count');
+    var archivedCount = document.getElementById('archived-count');
 
     function showStatus(msg, type) {
       status.innerHTML = '<div class="status-msg ' + type + '">' + msg + '</div>';
@@ -463,15 +476,19 @@
       activeTab = tab;
       tabPending.classList.toggle('active', tab === 'pending');
       tabPublished.classList.toggle('active', tab === 'published');
+      tabArchived.classList.toggle('active', tab === 'archived');
       pendingPanel.style.display = tab === 'pending' ? '' : 'none';
       publishedPanel.style.display = tab === 'published' ? '' : 'none';
+      archivedPanel.style.display = tab === 'archived' ? '' : 'none';
 
       if (tab === 'pending') loadPending();
       if (tab === 'published') loadPublished();
+      if (tab === 'archived') loadArchived();
     }
 
     tabPending.addEventListener('click', function () { switchTab('pending'); });
     tabPublished.addEventListener('click', function () { switchTab('published'); });
+    tabArchived.addEventListener('click', function () { switchTab('archived'); });
 
     // --- Pending Memories ---
     function loadPending() {
@@ -550,6 +567,47 @@
         .catch(function () {
           publishedPanel.innerHTML = '<div class="empty"><h2>Error</h2><p>Could not load published memories.</p></div>';
         });
+    }
+
+    // --- Archived Memories ---
+    function loadArchived() {
+      archivedPanel.innerHTML = '<div class="loading">Loading&hellip;</div>';
+
+      adminFetch('/archived').then(function (data) {
+        if (!data.ok) {
+          archivedPanel.innerHTML = '<div class="empty"><h2>Error</h2><p>Could not load archived memories.</p></div>';
+          return;
+        }
+
+        var memories = data.memories;
+        archivedCount.textContent = memories.length > 0 ? '(' + memories.length + ')' : '';
+
+        if (memories.length === 0) {
+          archivedPanel.innerHTML = '<div class="empty"><h2>Nothing archived</h2><p>Dismissed memories will appear here.</p></div>';
+          return;
+        }
+
+        var html = '';
+        for (var i = 0; i < memories.length; i++) {
+          var m = memories[i];
+          html += '<div class="card" id="archived-card-' + m.id + '">';
+          html += '<div class="card-name">' + escHtml(m.name) + '</div>';
+          if (m.relation) {
+            html += '<div class="card-relation">' + escHtml(m.relation) + '</div>';
+          }
+          html += '<div class="card-text">' + escHtml(m.text) + '</div>';
+          html += renderPhotoStrip(m.photos);
+          html += '<div class="card-date">' + formatDate(m.date) + '</div>';
+          html += '<div class="card-actions" style="justify-content: flex-end;">';
+          html += '<button class="btn btn-restore" data-restore-id="' + m.id + '">Restore &amp; Publish</button>';
+          html += '</div></div>';
+        }
+        archivedPanel.innerHTML = html;
+      }).catch(function (err) {
+        if (err.message !== 'Unauthorized') {
+          archivedPanel.innerHTML = '<div class="empty"><h2>Error</h2><p>Could not load archived memories.</p></div>';
+        }
+      });
     }
 
     // --- Actions ---
@@ -669,6 +727,38 @@
       if (removeBtn && !removeBtn.dataset.confirmRemove) {
         handleRemove(removeBtn);
       }
+    });
+
+    // Event delegation — Archived panel
+    archivedPanel.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-restore-id]');
+      if (!btn || btn.disabled) return;
+
+      var id = btn.dataset.restoreId;
+      var card = document.getElementById('archived-card-' + id);
+      btn.disabled = true;
+
+      adminFetch('/restore/' + id, 'POST').then(function (data) {
+        if (data.ok) {
+          card.style.opacity = '0.4';
+          card.style.transition = 'opacity 0.3s';
+          setTimeout(function () {
+            card.remove();
+            var remaining = archivedPanel.querySelectorAll('.card').length;
+            archivedCount.textContent = remaining > 0 ? '(' + remaining + ')' : '';
+            if (remaining === 0) {
+              archivedPanel.innerHTML = '<div class="empty"><h2>Nothing archived</h2><p>Dismissed memories will appear here.</p></div>';
+            }
+          }, 300);
+          showStatus('Memory restored — it will appear on the site shortly.', 'success');
+        } else {
+          showStatus(data.error || 'Something went wrong. Try again.', 'error');
+          btn.disabled = false;
+        }
+      }).catch(function () {
+        showStatus('Something went wrong. Try again.', 'error');
+        btn.disabled = false;
+      });
     });
 
     // --- PIN Entry ---

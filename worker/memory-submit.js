@@ -303,6 +303,78 @@ async function handleAdminApprove(issueNumber, env) {
   return json({ ok: true });
 }
 
+async function handleAdminArchived(env) {
+  const res = await githubFetch('/issues?labels=memory,rejected&state=closed&per_page=100&sort=created&direction=desc', env);
+  if (!res.ok) {
+    return json({ ok: false, error: 'Failed to fetch archived issues' }, 500);
+  }
+
+  const issues = await res.json();
+  const memories = issues.map(issue => {
+    const body = issue.body || '';
+    const nameMatch = body.match(/\*\*Name:\*\*\s*(.+)/);
+    const relationMatch = body.match(/\*\*Relation:\*\*\s*(.+)/);
+
+    const lines = body.split('\n');
+    let memoryLines = [];
+    let inMemory = false;
+    for (const line of lines) {
+      if (line.startsWith('---')) break;
+      if (inMemory) memoryLines.push(line);
+      if (line.startsWith('**Relation:**') || (!relationMatch && line.startsWith('**Name:**'))) {
+        inMemory = true;
+      }
+    }
+
+    const photoUrls = [];
+    const photoRegex = /!\[Photo \d+\]\((https:\/\/raw\.githubusercontent\.com\/[^)]+)\)/g;
+    let photoMatch;
+    while ((photoMatch = photoRegex.exec(body)) !== null) {
+      photoUrls.push(photoMatch[1]);
+    }
+
+    return {
+      id: issue.number,
+      name: nameMatch ? nameMatch[1].trim() : 'Unknown',
+      relation: relationMatch ? relationMatch[1].trim() : '',
+      text: memoryLines.join('\n').trim(),
+      photos: photoUrls,
+      date: issue.created_at
+    };
+  });
+
+  return json({ ok: true, memories });
+}
+
+async function handleAdminRestore(issueNumber, env) {
+  // Reopen the issue
+  const reopenRes = await githubFetch(`/issues/${issueNumber}`, env, {
+    method: 'PATCH',
+    body: JSON.stringify({ state: 'open' })
+  });
+
+  if (!reopenRes.ok) {
+    return json({ ok: false, error: 'Failed to reopen issue' }, 500);
+  }
+
+  // Remove rejected label
+  await githubFetch(`/issues/${issueNumber}/labels/rejected`, env, {
+    method: 'DELETE'
+  });
+
+  // Add approved label (triggers the publish workflow)
+  const labelRes = await githubFetch(`/issues/${issueNumber}/labels`, env, {
+    method: 'POST',
+    body: JSON.stringify({ labels: ['approved'] })
+  });
+
+  if (!labelRes.ok) {
+    return json({ ok: false, error: 'Failed to approve' }, 500);
+  }
+
+  return json({ ok: true });
+}
+
 async function handleAdminReject(issueNumber, env) {
   // Add rejected label
   await githubFetch(`/issues/${issueNumber}/labels`, env, {
@@ -390,6 +462,15 @@ export default {
 
       if (path === '/api/admin/pending' && request.method === 'GET') {
         return handleAdminPending(env);
+      }
+
+      if (path === '/api/admin/archived' && request.method === 'GET') {
+        return handleAdminArchived(env);
+      }
+
+      const restoreMatch = path.match(/^\/api\/admin\/restore\/(\d+)$/);
+      if (restoreMatch && request.method === 'POST') {
+        return handleAdminRestore(restoreMatch[1], env);
       }
 
       const approveMatch = path.match(/^\/api\/admin\/approve\/(\d+)$/);
