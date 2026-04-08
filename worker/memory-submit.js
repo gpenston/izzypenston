@@ -391,6 +391,39 @@ async function handleAdminReject(issueNumber, env) {
   return json({ ok: true });
 }
 
+async function handleAdminCaptions(request, env) {
+  const { manifest } = await request.json();
+  if (!manifest || !Array.isArray(manifest)) {
+    return json({ ok: false, error: 'manifest array is required' }, 400);
+  }
+
+  // Fetch current manifest.json to get its SHA
+  const fileRes = await githubFetch('/contents/assets/photos/manifest.json', env);
+  if (!fileRes.ok) {
+    return json({ ok: false, error: 'Failed to fetch manifest.json' }, 500);
+  }
+
+  const fileData = await fileRes.json();
+  const updated = JSON.stringify(manifest, null, 2) + '\n';
+
+  const putRes = await githubFetch('/contents/assets/photos/manifest.json', env, {
+    method: 'PUT',
+    body: JSON.stringify({
+      message: 'Update gallery captions via admin',
+      content: btoa(unescape(encodeURIComponent(updated))),
+      sha: fileData.sha
+    })
+  });
+
+  if (!putRes.ok) {
+    const err = await putRes.text();
+    console.error('GitHub PUT error:', err);
+    return json({ ok: false, error: 'Failed to update manifest.json' }, 500);
+  }
+
+  return json({ ok: true });
+}
+
 async function handleAdminUnpublish(request, env) {
   const { name, text } = await request.json();
   if (!name || !text) {
@@ -485,6 +518,10 @@ export default {
 
       if (path === '/api/admin/unpublish' && request.method === 'POST') {
         return handleAdminUnpublish(request, env);
+      }
+
+      if (path === '/api/admin/captions' && request.method === 'POST') {
+        return handleAdminCaptions(request, env);
       }
     }
 
