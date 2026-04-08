@@ -242,7 +242,7 @@ img {
 
 /* ===== Section ===== */
 .section {
-  padding: 72px 0;
+  padding: 60px 0;
 }
 
 @media (max-width: 600px) {
