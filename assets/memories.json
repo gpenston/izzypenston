@@ -1,5 +1,10 @@
 [
   {
+    "name": "TEST - Long Memory",
+    "relation": "Tester",
+    "text": "This is a test memory designed to be very long so we can verify the truncation behavior on the cards. Izzy was such an incredible person and everyone who met them felt immediately at ease in their presence. There was something magnetic about the way they approached the world — with curiosity, humor, and an openness that made every conversation feel meaningful. I remember the first time I met them at a community event. They were holding court in the corner of the room, making everyone around them laugh while simultaneously asking thoughtful questions that showed they were genuinely interested in each person they spoke to. That was just who Izzy was. They had this rare gift of making you feel like the most important person in the room. They will be so deeply missed by everyone who had the privilege of knowing them."
+  },
+  {
     "name": "TEST - Three Photos v2",
     "relation": "Tester",
     "text": "Test memory with three photos to verify the full stacked photo pile effect and lightbox gallery with prev/next navigation.",
