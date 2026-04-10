@@ -53,34 +53,6 @@ async function githubFetch(path, env, options = {}) {
 }
 
 // --- Helpers ---
-
-async function sendNotification(env, { name, relation, message, email }) {
-  if (!env.RESEND_API_KEY) return;
-  const subject = `New memory from ${name}`;
-  const relationLine = relation ? `<p><strong>Relation:</strong> ${relation}</p>` : '';
-  const html = `
-    <h2>New memory submitted on izzypenston.com</h2>
-    <p><strong>Name:</strong> ${name}</p>
-    ${relationLine}
-    <p><strong>Email:</strong> ${email}</p>
-    <blockquote style="border-left:3px solid #B34D18;margin:16px 0;padding:0 16px;color:#555;">${message.replace(/\n/g, '<br>')}</blockquote>
-    <p><a href="https://izzypenston.com/admin">Review in admin</a></p>
-  `.trim();
-  await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${env.RESEND_API_KEY}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      from: 'memories@izzypenston.com',
-      to: ['gpenston@gmail.com', 'zozomay@gmail.com'],
-      subject,
-      html
-    })
-  });
-}
-
 // --- Helpers ---
 
 // Upload a photo to assets/submissions/ and return the raw GitHub URL
@@ -237,11 +209,6 @@ async function handleSubmit(request, env) {
     console.error('GitHub API error:', err);
     return json({ ok: false, error: 'Failed to submit. Please try again.' }, 500);
   }
-
-  // Fire-and-forget notification — don't block the response
-  sendNotification(env, { name, relation, message, email }).catch(err => {
-    console.error('Resend error:', err);
-  });
 
   return json({ ok: true });
 }
