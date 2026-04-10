@@ -68,7 +68,7 @@
             <div class="hero-label" data-stagger="1">Remembering Izzy</div>
             <h1 data-stagger="2">Izzy Penston</h1>
             <div class="hero-dates" data-stagger="3">November 6, 2000 &ndash; March 25, 2026</div>
-            <p class="hero-intro" data-stagger="4">Known to many as Izzy, and to others as Isaac, they lived fully and authentically in every chapter of their life. A lifelong lover of learning, beloved friend, and community member, Izzy had a gift for bringing laughter and joy to everyone who knew them.</p>
+            <p class="hero-intro" data-stagger="4">Known to many as Izzy, and to others as Isaac, they lived fully and authentically in every chapter of their life. A lifelong lover of learning, beloved friend, and community member, Izzy had a gift for bringing laughter and joy to all who knew them.</p>
           </div>
         </div>
       </section>
@@ -232,7 +232,7 @@
 
       <section class="section" id="photos">
         <div class="section-label" data-reveal aria-hidden="true">Photos</div>
-        <h2 data-reveal>Moments &amp; Memories</h2>
+        <h2 data-reveal>Moments &amp; Photos</h2>
 
         <div class="gallery-grid" id="gallery-grid"></div>
 
@@ -245,22 +245,22 @@
 
       <section class="section" id="memories">
         <div class="section-label" data-reveal aria-hidden="true">Memories</div>
-        <h2 data-reveal>Words for Izzy</h2>
+        <h2 data-reveal>Remembering Izzy</h2>
 
         <div id="memories-list"></div>
 
         <div id="memories-load-more-wrap" style="display:none">
-          <button class="load-more" id="memories-load-more">Load More Memories</button>
+          <button class="load-more" id="memories-load-more">Load More</button>
         </div>
 
         <div style="text-align: center; margin-top: 32px;" data-reveal>
-          <button class="btn-primary" id="share-memory-btn" type="button">Share Your Memory of Izzy</button>
+          <button class="btn-primary" id="share-memory-btn" type="button">Share a Memory of Izzy</button>
         </div>
       </section>
 
       <section class="section" id="donate">
         <div class="section-label" data-reveal aria-hidden="true">Izzy&rsquo;s Legacy</div>
-        <h2 data-reveal>Honor Izzy&rsquo;s Memory</h2>
+        <h2 data-reveal>Honor Izzy&rsquo;s Legacy</h2>
 
         <p style="color: var(--text-secondary); margin-bottom: 24px; margin-left: 0;" data-reveal>Please consider donating to the causes closest to Izzy&rsquo;s heart.</p>
 
@@ -293,7 +293,7 @@
       <div class="footer-quote">&ldquo;Be excellent to each other. Party on, dudes!&rdquo;</div>
       <div class="footer-quote-attr">&mdash; Bill &amp; Ted&rsquo;s Excellent Adventure (words Izzy lived by)</div>
       <div class="footer-divider"></div>
-      <p class="footer-copy">With love from the Penston family: George, Zoe, Gwendolyn &amp; Maeve</p>
+      <p class="footer-copy">With love from the Penston family: George, Zoe, <span class="nowrap">Gwendolyn &amp; Maeve</span></p>
     </div>
   </footer>
 
@@ -311,23 +311,23 @@
           <div class="form-row">
             <div class="form-group">
               <label for="memory-name">Your Name *</label>
-              <input type="text" id="memory-name" name="name" class="form-input" required>
+              <input type="text" id="memory-name" name="name" class="form-input" required maxlength="100">
             </div>
 
             <div class="form-group">
               <label for="memory-relation">Relationship to Izzy</label>
-              <input type="text" id="memory-relation" name="relation" class="form-input" placeholder="Friend, classmate&hellip;">
+              <input type="text" id="memory-relation" name="relation" class="form-input" placeholder="Friend, classmate&hellip;" maxlength="100">
             </div>
           </div>
 
           <div class="form-group">
             <label for="memory-email">Email * <span class="form-hint-inline">(private &mdash; not displayed)</span></label>
-            <input type="email" id="memory-email" name="email" class="form-input" required>
+            <input type="email" id="memory-email" name="email" class="form-input" required maxlength="254">
           </div>
 
           <div class="form-group">
             <label for="memory-text">Your Memory *</label>
-            <textarea id="memory-text" name="message" class="form-textarea" required placeholder="Share a favorite memory, story, or what Izzy meant to you&hellip;"></textarea>
+            <textarea id="memory-text" name="message" class="form-textarea" required maxlength="2000" placeholder="Share a favorite memory, story, or what Izzy meant to you&hellip;"></textarea>
           </div>
 
           <div class="form-group">

@@ -2,6 +2,8 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Albert+Sans:wght@400;500;600&display=swap');
 
+.nowrap { white-space: nowrap; }
+
 /* ===== Design Tokens ===== */
 :root {
   --orange: #B34D18;
@@ -1333,6 +1335,10 @@ footer {
 }
 
 @media (max-width: 600px) {
+  .hero {
+    padding: 48px 0 56px;
+  }
+
   .hero-inner {
     flex-direction: column;
     align-items: center;
