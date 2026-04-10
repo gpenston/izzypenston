@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Izzy Penston — Caption Editor</title>
+  <title>Izzy Penston — Gallery Manager</title>
   <meta name="robots" content="noindex, nofollow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,6 +15,7 @@
       --orange: #B34D18;
       --green: #2D8A4E;
       --red: #CF222E;
+      --blue: #2D6494;
       --bg: #FAF7F2;
       --bg-secondary: #F0EBE3;
       --text-primary: #1E1B18;
@@ -28,6 +29,7 @@
         --orange: #E07A3A;
         --green: #3FB96A;
         --red: #F85149;
+        --blue: #5A9BD5;
         --bg: #141210;
         --bg-secondary: #1E1B18;
         --text-primary: #F2EDE6;
@@ -113,6 +115,11 @@
 
     .btn-save {
       background: var(--green);
+      color: white;
+    }
+
+    .btn-upload {
+      background: var(--blue);
       color: white;
     }
 
@@ -214,18 +221,187 @@
       cursor: pointer;
     }
 
+    /* --- Upload Area --- */
+    .upload-area {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      margin-bottom: 24px;
+      transition: border-color 0.2s, background 0.2s;
+      display: none;
+    }
+
+    .upload-area.visible { display: block; }
+
+    .upload-area.drag-over {
+      border-color: var(--blue);
+      background: color-mix(in srgb, var(--blue) 5%, var(--bg));
+    }
+
+    .upload-area p {
+      color: var(--text-tertiary);
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .upload-area label {
+      display: inline-block;
+      background: var(--blue);
+      color: white;
+      font-family: 'Albert Sans', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 8px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .upload-area label:hover { opacity: 0.85; }
+
+    .upload-previews {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+      justify-content: center;
+    }
+
+    .upload-preview-item {
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+
+    .upload-preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .upload-preview-remove {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--red);
+      color: white;
+      border: none;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .upload-actions {
+      margin-top: 16px;
+      display: none;
+    }
+
+    .upload-actions.visible { display: block; }
+
+    .upload-status {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      margin-top: 8px;
+    }
+
+    /* --- Photo Rows --- */
     .photo-row {
       display: flex;
-      gap: 16px;
+      gap: 12px;
       align-items: flex-start;
-      padding: 16px 0;
+      padding: 14px 0;
       border-bottom: 1px solid var(--border);
+      position: relative;
+      background: var(--bg);
+      transition: opacity 0.2s;
     }
 
     .photo-row:last-child {
       border-bottom: none;
     }
 
+    .photo-row.is-hidden {
+      opacity: 0.35;
+    }
+
+    .photo-row.dragging {
+      opacity: 0.3;
+    }
+
+    .drop-indicator {
+      height: 3px;
+      background: var(--orange);
+      border-radius: 2px;
+      margin: -2px 0;
+      pointer-events: none;
+    }
+
+    /* --- Drag Handle --- */
+    .drag-handle {
+      width: 24px;
+      min-width: 24px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      color: var(--text-tertiary);
+      touch-action: none;
+      user-select: none;
+      flex-shrink: 0;
+      border-radius: 4px;
+      transition: color 0.15s, background 0.15s;
+      align-self: center;
+    }
+
+    .drag-handle:hover {
+      color: var(--text-primary);
+      background: var(--bg-secondary);
+    }
+
+    .drag-handle:active {
+      cursor: grabbing;
+    }
+
+    .drag-ghost {
+      position: fixed;
+      z-index: 100;
+      pointer-events: none;
+      background: var(--bg);
+      border: 1.5px solid var(--orange);
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      opacity: 0.95;
+      max-width: 320px;
+    }
+
+    .drag-ghost img {
+      width: 60px;
+      height: 45px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .drag-ghost span {
+      font-size: 13px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* --- Thumbnail & Info --- */
     .photo-thumb {
       width: 120px;
       min-width: 120px;
@@ -251,12 +427,47 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
+      min-width: 0;
+    }
+
+    .photo-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .photo-file {
       font-size: 12px;
       color: var(--text-tertiary);
       font-family: monospace;
+    }
+
+    .photo-badges {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .badge-wide {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--blue);
+      background: color-mix(in srgb, var(--blue) 10%, var(--bg));
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .badge-hidden {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--red);
+      background: color-mix(in srgb, var(--red) 10%, var(--bg));
+      padding: 2px 6px;
+      border-radius: 4px;
     }
 
     .caption-input {
@@ -279,6 +490,33 @@
     .caption-input.changed {
       border-color: var(--green);
       background: color-mix(in srgb, var(--green) 5%, var(--bg-secondary));
+    }
+
+    /* --- Hide Toggle --- */
+    .hide-toggle {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: color 0.15s, border-color 0.15s;
+      align-self: center;
+    }
+
+    .hide-toggle:hover {
+      color: var(--text-primary);
+      border-color: var(--text-tertiary);
+    }
+
+    .hide-toggle.is-hidden {
+      color: var(--red);
+      border-color: var(--red);
     }
 
     .loading {
@@ -307,13 +545,15 @@
     .toast.error { background: var(--red); }
 
     @media (max-width: 600px) {
-      .photo-row { flex-direction: column; }
+      .photo-row { flex-wrap: wrap; }
       .photo-thumb, .photo-thumb.wide { width: 100%; min-width: unset; height: 200px; }
+      .drag-handle { width: 100%; height: 28px; }
       .header { flex-wrap: wrap; gap: 10px; }
     }
 
     @media (prefers-color-scheme: dark) {
       .btn-save { color: #1E1B18; }
+      .btn-upload { color: #1E1B18; }
       .pin-btn { color: #1E1B18; }
     }
   </style>
@@ -321,10 +561,11 @@
 <body>
 
   <div class="header">
-    <h1><a href="/admin/"><svg class="nav-star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" aria-hidden="true"><polygon points="50,6 61.8,33.8 91.8,36.4 69,56.2 75.9,85.6 50,70 24.1,85.6 31,56.2 8.2,36.4 38.2,33.8" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/></svg>Izzy</a> Captions</h1>
+    <h1><a href="/admin/"><svg class="nav-star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" aria-hidden="true"><polygon points="50,6 61.8,33.8 91.8,36.4 69,56.2 75.9,85.6 50,70 24.1,85.6 31,56.2 8.2,36.4 38.2,33.8" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/></svg>Izzy</a> Gallery</h1>
     <div class="header-actions">
       <span class="change-count" id="change-count"></span>
-      <button class="btn btn-save" id="btn-save" style="display:none">Save Captions</button>
+      <button class="btn btn-save" id="btn-save" style="display:none">Save Changes</button>
+      <button class="btn btn-upload" id="btn-toggle-upload" style="display:none">Upload Photos</button>
       <a href="/admin/" class="btn-back">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         Admin
@@ -336,8 +577,8 @@
   <div class="container">
     <!-- PIN Screen -->
     <div id="pin-screen" class="pin-screen">
-      <h2>Caption Editor</h2>
-      <p>Enter PIN to edit gallery captions.</p>
+      <h2>Gallery Manager</h2>
+      <p>Enter PIN to manage gallery photos.</p>
       <div class="pin-error" id="pin-error">Incorrect PIN. Try again.</div>
       <input type="password" class="pin-input" id="pin-input" maxlength="10" inputmode="numeric" autocomplete="off" placeholder="PIN" aria-label="PIN">
       <br>
@@ -346,7 +587,20 @@
 
     <!-- Editor Screen -->
     <div id="editor-screen" style="display:none">
-      <p class="intro">Edit captions below. Changed fields turn green. Hit <strong>Save Captions</strong> to publish changes to the site.</p>
+      <p class="intro">Drag to reorder, click the eye to hide/show, edit captions, or upload new photos. Hit <strong>Save Changes</strong> to publish.</p>
+
+      <!-- Upload Area -->
+      <div class="upload-area" id="upload-area">
+        <p>Drag photos here or click to browse</p>
+        <label for="upload-input">Choose Photos</label>
+        <input type="file" id="upload-input" accept="image/jpeg,image/png,image/webp" multiple style="display:none">
+        <div class="upload-previews" id="upload-previews"></div>
+        <div class="upload-actions" id="upload-actions">
+          <button class="btn btn-upload" id="btn-do-upload">Upload</button>
+          <div class="upload-status" id="upload-status"></div>
+        </div>
+      </div>
+
       <div id="grid">
         <div class="loading">Loading photos&hellip;</div>
       </div>
@@ -360,9 +614,10 @@
     var API_BASE = 'https://izzypenston.com/api/admin';
     var pin = sessionStorage.getItem('admin_pin') || '';
     var manifest = [];
-    var originals = {};
+    var originalManifest = []; // Deep copy for change tracking
     var saving = false;
 
+    // DOM refs
     var pinScreen = document.getElementById('pin-screen');
     var editorScreen = document.getElementById('editor-screen');
     var pinInput = document.getElementById('pin-input');
@@ -370,8 +625,21 @@
     var pinError = document.getElementById('pin-error');
     var grid = document.getElementById('grid');
     var btnSave = document.getElementById('btn-save');
+    var btnToggleUpload = document.getElementById('btn-toggle-upload');
     var changeCount = document.getElementById('change-count');
     var toast = document.getElementById('toast');
+    var uploadArea = document.getElementById('upload-area');
+    var uploadInput = document.getElementById('upload-input');
+    var uploadPreviews = document.getElementById('upload-previews');
+    var uploadActions = document.getElementById('upload-actions');
+    var btnDoUpload = document.getElementById('btn-do-upload');
+    var uploadStatus = document.getElementById('upload-status');
+    var logoutBtn = document.getElementById('logout-btn');
+
+    // Upload state
+    var uploadFiles = [];
+
+    // ===== Utilities =====
 
     function showToast(msg, isError) {
       toast.textContent = msg;
@@ -379,68 +647,296 @@
       setTimeout(function () { toast.className = 'toast'; }, 3000);
     }
 
-    function countChanges() {
-      var count = 0;
-      for (var i = 0; i < manifest.length; i++) {
-        var input = document.getElementById('caption-' + i);
-        if (input && input.value !== originals[i]) {
-          count++;
-          input.classList.add('changed');
-        } else if (input) {
-          input.classList.remove('changed');
-        }
+    function escAttr(str) {
+      return (str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    }
+
+    function deepCopy(arr) {
+      return JSON.parse(JSON.stringify(arr));
+    }
+
+    // ===== SVG Icons =====
+
+    var GRIP_SVG = '<svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor" aria-hidden="true"><circle cx="3" cy="2" r="1.5"/><circle cx="7" cy="2" r="1.5"/><circle cx="3" cy="8" r="1.5"/><circle cx="7" cy="8" r="1.5"/><circle cx="3" cy="14" r="1.5"/><circle cx="7" cy="14" r="1.5"/></svg>';
+
+    var EYE_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+
+    var EYE_OFF_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+
+    // ===== Change Tracking =====
+
+    function getManifestOrder() {
+      // Read current order from DOM
+      var rows = grid.querySelectorAll('.photo-row');
+      var order = [];
+      for (var i = 0; i < rows.length; i++) {
+        order.push(parseInt(rows[i].dataset.idx, 10));
       }
-      changeCount.textContent = count > 0 ? count + ' changed' : '';
-      btnSave.style.display = count > 0 ? '' : 'none';
-      return count;
+      return order;
     }
 
     function getUpdatedManifest() {
-      var updated = JSON.parse(JSON.stringify(manifest));
-      for (var i = 0; i < updated.length; i++) {
-        var input = document.getElementById('caption-' + i);
-        if (input) updated[i].caption = input.value;
+      var rows = grid.querySelectorAll('.photo-row');
+      var updated = [];
+      for (var i = 0; i < rows.length; i++) {
+        var idx = parseInt(rows[i].dataset.idx, 10);
+        var entry = deepCopy(manifest[idx]);
+        var input = rows[i].querySelector('.caption-input');
+        if (input) entry.caption = input.value;
+        entry.order = i + 1; // Sequential renumber
+        // Hidden state is already on manifest[idx].hidden
+        if (manifest[idx].hidden) {
+          entry.hidden = true;
+        } else {
+          delete entry.hidden;
+        }
+        updated.push(entry);
       }
       return updated;
     }
 
-    function escAttr(str) {
-      return (str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    function countChanges() {
+      var count = 0;
+      var rows = grid.querySelectorAll('.photo-row');
+      var domOrder = getManifestOrder();
+
+      for (var i = 0; i < rows.length; i++) {
+        var idx = parseInt(rows[i].dataset.idx, 10);
+        var input = rows[i].querySelector('.caption-input');
+        var captionChanged = input && input.value !== (originalManifest[idx] ? originalManifest[idx].caption : '');
+        var hiddenChanged = !!manifest[idx].hidden !== !!(originalManifest[idx] && originalManifest[idx].hidden);
+        var orderChanged = domOrder[i] !== i; // Original order is 0, 1, 2...
+
+        if (captionChanged) {
+          input.classList.add('changed');
+          count++;
+        } else if (input) {
+          input.classList.remove('changed');
+        }
+
+        if (hiddenChanged) count++;
+        if (orderChanged) count++;
+      }
+
+      // Deduplicate: if order changed, count it as 1 change not N
+      var anyOrderChange = false;
+      for (var j = 0; j < domOrder.length; j++) {
+        if (domOrder[j] !== j) { anyOrderChange = true; break; }
+      }
+
+      // Recount properly
+      count = 0;
+      for (var k = 0; k < rows.length; k++) {
+        var idx2 = parseInt(rows[k].dataset.idx, 10);
+        var inp = rows[k].querySelector('.caption-input');
+        if (inp && inp.value !== (originalManifest[idx2] ? originalManifest[idx2].caption : '')) count++;
+        if (!!manifest[idx2].hidden !== !!(originalManifest[idx2] && originalManifest[idx2].hidden)) count++;
+      }
+      if (anyOrderChange) count++;
+
+      changeCount.textContent = count > 0 ? count + ' change' + (count > 1 ? 's' : '') : '';
+      btnSave.style.display = count > 0 ? '' : 'none';
+      return count;
     }
+
+    // ===== Render Grid =====
 
     function renderGrid() {
       var html = '';
       for (var i = 0; i < manifest.length; i++) {
         var m = manifest[i];
-        originals[i] = m.caption;
-        html += '<div class="photo-row">';
+        var isHidden = !!m.hidden;
+        html += '<div class="photo-row' + (isHidden ? ' is-hidden' : '') + '" data-idx="' + i + '">';
+        html += '<div class="drag-handle" aria-label="Drag to reorder">' + GRIP_SVG + '</div>';
         html += '<img class="photo-thumb' + (m.wide ? ' wide' : '') + '" src="/assets/photos/' + m.file + '" alt="" loading="lazy" onclick="window.open(\'/assets/photos/' + m.file + '\', \'_blank\')">';
         html += '<div class="photo-info">';
-        html += '<div class="photo-file">' + m.file + (m.wide ? ' &bull; wide' : '') + '</div>';
-        html += '<input class="caption-input" id="caption-' + i + '" type="text" value="' + escAttr(m.caption) + '" placeholder="Add a caption&hellip;">';
+        html += '<div class="photo-meta"><span class="photo-file">' + m.file + '</span>';
+        html += '<div class="photo-badges">';
+        if (m.wide) html += '<span class="badge-wide">wide</span>';
+        if (isHidden) html += '<span class="badge-hidden">hidden</span>';
         html += '</div></div>';
+        html += '<input class="caption-input" type="text" value="' + escAttr(m.caption) + '" placeholder="Add a caption&hellip;">';
+        html += '</div>';
+        html += '<button class="hide-toggle' + (isHidden ? ' is-hidden' : '') + '" data-hide-idx="' + i + '" aria-label="' + (isHidden ? 'Show photo' : 'Hide photo') + '" title="' + (isHidden ? 'Show photo' : 'Hide photo') + '">' + (isHidden ? EYE_OFF_SVG : EYE_SVG) + '</button>';
+        html += '</div>';
       }
       grid.innerHTML = html;
 
+      // Caption input change listener
       grid.addEventListener('input', function (e) {
         if (e.target.classList.contains('caption-input')) countChanges();
       });
+
+      // Hide toggle listener
+      grid.addEventListener('click', function (e) {
+        var toggleBtn = e.target.closest('.hide-toggle');
+        if (!toggleBtn) return;
+        var idx = parseInt(toggleBtn.dataset.hideIdx, 10);
+        manifest[idx].hidden = !manifest[idx].hidden;
+        var row = toggleBtn.closest('.photo-row');
+        var badges = row.querySelector('.photo-badges');
+
+        if (manifest[idx].hidden) {
+          row.classList.add('is-hidden');
+          toggleBtn.classList.add('is-hidden');
+          toggleBtn.innerHTML = EYE_OFF_SVG;
+          toggleBtn.setAttribute('aria-label', 'Show photo');
+          toggleBtn.setAttribute('title', 'Show photo');
+          if (!badges.querySelector('.badge-hidden')) {
+            var badge = document.createElement('span');
+            badge.className = 'badge-hidden';
+            badge.textContent = 'hidden';
+            badges.appendChild(badge);
+          }
+        } else {
+          row.classList.remove('is-hidden');
+          toggleBtn.classList.remove('is-hidden');
+          toggleBtn.innerHTML = EYE_SVG;
+          toggleBtn.setAttribute('aria-label', 'Hide photo');
+          toggleBtn.setAttribute('title', 'Hide photo');
+          var hb = badges.querySelector('.badge-hidden');
+          if (hb) hb.remove();
+        }
+
+        countChanges();
+      });
+
+      initDragAndDrop();
     }
 
-    function loadManifest() {
-      grid.innerHTML = '<div class="loading">Loading photos&hellip;</div>';
-      fetch('/assets/photos/manifest.json?v=' + Date.now())
-        .then(function (r) { return r.json(); })
-        .then(function (data) {
-          manifest = data;
-          renderGrid();
-        })
-        .catch(function () {
-          grid.innerHTML = '<div class="loading">Could not load manifest.json</div>';
-        });
+    // ===== Drag and Drop =====
+
+    function initDragAndDrop() {
+      var draggedRow = null;
+      var ghost = null;
+      var indicator = null;
+      var offsetY = 0;
+      var scrollInterval = null;
+
+      function createGhost(row) {
+        var g = document.createElement('div');
+        g.className = 'drag-ghost';
+        var img = row.querySelector('.photo-thumb');
+        var file = row.querySelector('.photo-file');
+        if (img) {
+          var cloneImg = document.createElement('img');
+          cloneImg.src = img.src;
+          g.appendChild(cloneImg);
+        }
+        if (file) {
+          var span = document.createElement('span');
+          span.textContent = file.textContent;
+          g.appendChild(span);
+        }
+        document.body.appendChild(g);
+        return g;
+      }
+
+      function removeIndicator() {
+        if (indicator && indicator.parentNode) {
+          indicator.parentNode.removeChild(indicator);
+        }
+        indicator = null;
+      }
+
+      function startAutoScroll(clientY) {
+        stopAutoScroll();
+        var edge = 60;
+        var speed = 8;
+        scrollInterval = setInterval(function () {
+          if (clientY < edge) {
+            window.scrollBy(0, -speed);
+          } else if (clientY > window.innerHeight - edge) {
+            window.scrollBy(0, speed);
+          }
+        }, 16);
+      }
+
+      function stopAutoScroll() {
+        if (scrollInterval) {
+          clearInterval(scrollInterval);
+          scrollInterval = null;
+        }
+      }
+
+      grid.addEventListener('pointerdown', function (e) {
+        var handle = e.target.closest('.drag-handle');
+        if (!handle) return;
+
+        var row = handle.closest('.photo-row');
+        if (!row) return;
+
+        e.preventDefault();
+        draggedRow = row;
+        offsetY = e.clientY - row.getBoundingClientRect().top;
+
+        ghost = createGhost(row);
+        ghost.style.left = (e.clientX - 40) + 'px';
+        ghost.style.top = (e.clientY - 20) + 'px';
+
+        row.classList.add('dragging');
+        handle.setPointerCapture(e.pointerId);
+      });
+
+      grid.addEventListener('pointermove', function (e) {
+        if (!draggedRow) return;
+        e.preventDefault();
+
+        ghost.style.left = (e.clientX - 40) + 'px';
+        ghost.style.top = (e.clientY - 20) + 'px';
+
+        // Auto-scroll near edges
+        startAutoScroll(e.clientY);
+
+        // Find drop target
+        removeIndicator();
+        // Temporarily hide ghost to get element underneath
+        ghost.style.display = 'none';
+        var target = document.elementFromPoint(e.clientX, e.clientY);
+        ghost.style.display = '';
+
+        if (!target) return;
+        var targetRow = target.closest('.photo-row');
+        if (!targetRow || targetRow === draggedRow) return;
+
+        var rect = targetRow.getBoundingClientRect();
+        var midY = rect.top + rect.height / 2;
+
+        indicator = document.createElement('div');
+        indicator.className = 'drop-indicator';
+
+        if (e.clientY < midY) {
+          targetRow.parentNode.insertBefore(indicator, targetRow);
+        } else {
+          targetRow.parentNode.insertBefore(indicator, targetRow.nextSibling);
+        }
+      });
+
+      function endDrag(e) {
+        if (!draggedRow) return;
+
+        stopAutoScroll();
+
+        // Move row to indicator position
+        if (indicator && indicator.parentNode) {
+          indicator.parentNode.insertBefore(draggedRow, indicator);
+          removeIndicator();
+        }
+
+        draggedRow.classList.remove('dragging');
+        if (ghost && ghost.parentNode) ghost.parentNode.removeChild(ghost);
+        ghost = null;
+        draggedRow = null;
+
+        countChanges();
+      }
+
+      grid.addEventListener('pointerup', endDrag);
+      grid.addEventListener('pointercancel', endDrag);
     }
 
-    // --- Save to GitHub via Worker ---
+    // ===== Save =====
+
     btnSave.addEventListener('click', function () {
       if (saving) return;
       var changes = countChanges();
@@ -474,17 +970,12 @@
         })
         .then(function (data) {
           if (data.ok) {
-            // Update originals to match saved state
-            for (var i = 0; i < manifest.length; i++) {
-              var input = document.getElementById('caption-' + i);
-              if (input) {
-                manifest[i].caption = input.value;
-                originals[i] = input.value;
-                input.classList.remove('changed');
-              }
-            }
+            // Reload manifest from the saved state
+            manifest = updated;
+            originalManifest = deepCopy(updated);
+            renderGrid();
             countChanges();
-            showToast('Captions saved! Changes will be live in a moment.');
+            showToast('Changes saved! Gallery will update shortly.');
           } else {
             showToast(data.error || 'Failed to save. Try again.', true);
           }
@@ -497,17 +988,197 @@
         .finally(function () {
           saving = false;
           btnSave.disabled = false;
-          btnSave.textContent = 'Save Captions';
+          btnSave.textContent = 'Save Changes';
         });
     });
 
-    // --- PIN Entry ---
+    // ===== Upload =====
+
+    // Toggle upload area
+    btnToggleUpload.addEventListener('click', function () {
+      uploadArea.classList.toggle('visible');
+      btnToggleUpload.textContent = uploadArea.classList.contains('visible') ? 'Hide Upload' : 'Upload Photos';
+    });
+
+    // Drag-and-drop files onto upload area
+    uploadArea.addEventListener('dragenter', function (e) { e.preventDefault(); uploadArea.classList.add('drag-over'); });
+    uploadArea.addEventListener('dragover', function (e) { e.preventDefault(); });
+    uploadArea.addEventListener('dragleave', function () { uploadArea.classList.remove('drag-over'); });
+    uploadArea.addEventListener('drop', function (e) {
+      e.preventDefault();
+      uploadArea.classList.remove('drag-over');
+      var files = Array.from(e.dataTransfer.files).filter(function (f) {
+        return f.type.match(/^image\/(jpeg|png|webp)$/);
+      });
+      files.forEach(function (f) { if (uploadFiles.length < 10) uploadFiles.push(f); });
+      renderUploadPreviews();
+    });
+
+    uploadInput.addEventListener('change', function () {
+      var files = Array.from(uploadInput.files);
+      files.forEach(function (f) { if (uploadFiles.length < 10) uploadFiles.push(f); });
+      uploadInput.value = '';
+      renderUploadPreviews();
+    });
+
+    function renderUploadPreviews() {
+      uploadPreviews.innerHTML = '';
+      uploadFiles.forEach(function (file, i) {
+        var url = URL.createObjectURL(file);
+        var wrap = document.createElement('div');
+        wrap.className = 'upload-preview-item';
+
+        var img = document.createElement('img');
+        img.src = url;
+        img.alt = 'Preview';
+        img.onload = function () { URL.revokeObjectURL(url); };
+        wrap.appendChild(img);
+
+        var removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'upload-preview-remove';
+        removeBtn.textContent = '\u00d7';
+        removeBtn.setAttribute('aria-label', 'Remove');
+        removeBtn.addEventListener('click', function () {
+          uploadFiles.splice(i, 1);
+          renderUploadPreviews();
+        });
+        wrap.appendChild(removeBtn);
+
+        uploadPreviews.appendChild(wrap);
+      });
+
+      uploadActions.classList.toggle('visible', uploadFiles.length > 0);
+    }
+
+    // Resize image (from modal.js pattern)
+    function resizeImage(file) {
+      return new Promise(function (resolve) {
+        var url = URL.createObjectURL(file);
+        var img = new Image();
+        img.onload = function () {
+          URL.revokeObjectURL(url);
+          var maxDim = 1200;
+          var w = img.naturalWidth;
+          var h = img.naturalHeight;
+          var scale = (w > maxDim || h > maxDim) ? Math.min(maxDim / w, maxDim / h) : 1;
+          var canvas = document.createElement('canvas');
+          canvas.width = Math.round(w * scale);
+          canvas.height = Math.round(h * scale);
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          // Detect wide aspect ratio
+          var isWide = (canvas.width / canvas.height) > 1.4;
+
+          canvas.toBlob(function (blob) {
+            resolve({ blob: blob || file, wide: isWide, width: canvas.width, height: canvas.height });
+          }, 'image/jpeg', 0.85);
+        };
+        img.onerror = function () { URL.revokeObjectURL(url); resolve({ blob: file, wide: false }); };
+        img.src = url;
+      });
+    }
+
+    function blobToBase64(blob) {
+      return new Promise(function (resolve) {
+        var reader = new FileReader();
+        reader.onloadend = function () {
+          // Remove data:image/jpeg;base64, prefix
+          var base64 = reader.result.split(',')[1];
+          resolve(base64);
+        };
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    btnDoUpload.addEventListener('click', function () {
+      if (uploadFiles.length === 0) return;
+      btnDoUpload.disabled = true;
+      btnDoUpload.textContent = 'Uploading\u2026';
+
+      var total = uploadFiles.length;
+      var completed = 0;
+
+      function uploadNext() {
+        if (completed >= total) {
+          btnDoUpload.disabled = false;
+          btnDoUpload.textContent = 'Upload';
+          uploadFiles = [];
+          renderUploadPreviews();
+          uploadStatus.textContent = '';
+          showToast(total + ' photo' + (total > 1 ? 's' : '') + ' uploaded! Save to publish order/captions.');
+          // Reload manifest to include new photos
+          loadManifest();
+          return;
+        }
+
+        uploadStatus.textContent = 'Uploading ' + (completed + 1) + ' of ' + total + '\u2026';
+
+        resizeImage(uploadFiles[completed]).then(function (result) {
+          return blobToBase64(result.blob).then(function (base64) {
+            return fetch(API_BASE + '/upload-photo', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Admin-Pin': pin
+              },
+              body: JSON.stringify({ image: base64, wide: result.wide })
+            });
+          });
+        }).then(function (r) {
+          if (r.status === 401) {
+            sessionStorage.removeItem('admin_pin');
+            pin = '';
+            pinScreen.style.display = '';
+            editorScreen.style.display = 'none';
+            throw new Error('Unauthorized');
+          }
+          return r.json();
+        }).then(function (data) {
+          if (!data.ok) {
+            showToast('Upload failed: ' + (data.error || 'Unknown error'), true);
+          }
+          completed++;
+          uploadNext();
+        }).catch(function (err) {
+          if (err.message !== 'Unauthorized') {
+            showToast('Upload failed. Try again.', true);
+          }
+          btnDoUpload.disabled = false;
+          btnDoUpload.textContent = 'Upload';
+          uploadStatus.textContent = '';
+        });
+      }
+
+      uploadNext();
+    });
+
+    // ===== Load Manifest =====
+
+    function loadManifest() {
+      grid.innerHTML = '<div class="loading">Loading photos&hellip;</div>';
+      fetch('/assets/photos/manifest.json?v=' + Date.now())
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          // Sort by order so admin sees the current gallery order
+          data.sort(function (a, b) { return a.order - b.order; });
+          manifest = data;
+          originalManifest = deepCopy(data);
+          renderGrid();
+        })
+        .catch(function () {
+          grid.innerHTML = '<div class="loading">Could not load manifest.json</div>';
+        });
+    }
+
+    // ===== PIN Entry =====
+
     function tryPin() {
       var val = pinInput.value.trim();
       if (!val) return;
       pin = val;
 
-      // Verify PIN by hitting a known endpoint
       fetch(API_BASE + '/pending', {
         headers: { 'X-Admin-Pin': pin }
       }).then(function (r) {
@@ -522,6 +1193,7 @@
         editorScreen.style.display = '';
         pinError.style.display = 'none';
         logoutBtn.style.display = '';
+        btnToggleUpload.style.display = '';
         loadManifest();
       });
     }
@@ -532,13 +1204,13 @@
     });
 
     // Logout
-    var logoutBtn = document.getElementById('logout-btn');
     logoutBtn.addEventListener('click', function () {
       sessionStorage.removeItem('admin_pin');
       pin = '';
       editorScreen.style.display = 'none';
       pinScreen.style.display = '';
       logoutBtn.style.display = 'none';
+      btnToggleUpload.style.display = 'none';
       pinInput.value = '';
       pinInput.focus();
     });
@@ -548,6 +1220,7 @@
       pinScreen.style.display = 'none';
       editorScreen.style.display = '';
       logoutBtn.style.display = '';
+      btnToggleUpload.style.display = '';
       loadManifest();
     }
   }());

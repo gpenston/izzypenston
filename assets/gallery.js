@@ -73,7 +73,7 @@
     fetch('/assets/photos/manifest.json?v=' + Date.now())
       .then(function (r) { return r.json(); })
       .then(function (data) {
-        photos = data.sort(function (a, b) { return a.order - b.order; });
+        photos = data.filter(function (p) { return !p.hidden; }).sort(function (a, b) { return a.order - b.order; });
         if (photos.length === 0) {
           grid.innerHTML = '<p style="color:var(--text-tertiary);grid-column:1/-1;text-align:center;">Photos coming soon.</p>';
           return;

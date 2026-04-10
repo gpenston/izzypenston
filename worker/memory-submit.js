@@ -499,6 +499,95 @@ async function handleAdminUnpublish(request, env) {
   return json({ ok: true });
 }
 
+async function handleAdminUploadPhoto(request, env) {
+  const { image, wide } = await request.json();
+  if (!image) {
+    return json({ ok: false, error: 'image is required' }, 400);
+  }
+
+  // Decode base64 and validate
+  let bytes;
+  try {
+    const binary = atob(image);
+    bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  } catch (e) {
+    return json({ ok: false, error: 'Invalid base64 image data' }, 400);
+  }
+
+  if (bytes.length > 1.5 * 1024 * 1024) {
+    return json({ ok: false, error: 'Image too large (max 1.5MB)' }, 400);
+  }
+
+  if (!hasValidImageHeader(bytes.buffer)) {
+    return json({ ok: false, error: 'Invalid image format' }, 400);
+  }
+
+  // Generate unique filename
+  const timestamp = Date.now();
+  const rand = Math.random().toString(36).slice(2, 8);
+  const filename = `gallery-${timestamp}-${rand}.jpg`;
+  const filepath = `assets/photos/${filename}`;
+
+  // Commit photo file to repo
+  const photoRes = await githubFetch(`/contents/${filepath}`, env, {
+    method: 'PUT',
+    body: JSON.stringify({
+      message: `Add gallery photo ${filename}`,
+      content: image
+    })
+  });
+
+  if (!photoRes.ok) {
+    const err = await photoRes.text();
+    console.error('Photo commit error:', err);
+    return json({ ok: false, error: 'Failed to upload photo' }, 500);
+  }
+
+  // Now update manifest.json to include the new photo
+  const manifestRes = await githubFetch('/contents/assets/photos/manifest.json', env);
+  if (!manifestRes.ok) {
+    return json({ ok: false, error: 'Failed to fetch manifest.json' }, 500);
+  }
+
+  const manifestData = await manifestRes.json();
+  const manifestBytes = Uint8Array.from(atob(manifestData.content.replace(/\n/g, '')), c => c.charCodeAt(0));
+  const manifestContent = new TextDecoder().decode(manifestBytes);
+  const manifestArr = JSON.parse(manifestContent);
+
+  // Find the highest order value
+  let maxOrder = 0;
+  for (const entry of manifestArr) {
+    if (entry.order > maxOrder) maxOrder = entry.order;
+  }
+
+  const newEntry = {
+    file: filename,
+    caption: '',
+    wide: !!wide,
+    order: maxOrder + 1
+  };
+  manifestArr.push(newEntry);
+
+  const updatedManifest = JSON.stringify(manifestArr, null, 2) + '\n';
+  const putRes = await githubFetch('/contents/assets/photos/manifest.json', env, {
+    method: 'PUT',
+    body: JSON.stringify({
+      message: `Add ${filename} to gallery manifest`,
+      content: btoa(unescape(encodeURIComponent(updatedManifest))),
+      sha: manifestData.sha
+    })
+  });
+
+  if (!putRes.ok) {
+    const err = await putRes.text();
+    console.error('Manifest update error:', err);
+    return json({ ok: false, error: 'Photo uploaded but manifest update failed' }, 500);
+  }
+
+  return json({ ok: true, entry: newEntry });
+}
+
 // --- Router ---
 
 export default {
@@ -552,6 +641,10 @@ export default {
 
       if (path === '/api/admin/captions' && request.method === 'POST') {
         return handleAdminCaptions(request, env);
+      }
+
+      if (path === '/api/admin/upload-photo' && request.method === 'POST') {
+        return handleAdminUploadPhoto(request, env);
       }
     }
 

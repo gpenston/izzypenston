@@ -987,51 +987,26 @@ img {
   line-height: 1.5;
 }
 
-/* ===== Pronoun trigger + tooltip ===== */
+/* ===== Pronoun trigger ===== */
 .pronoun-trigger {
   all: unset;
   font: inherit;
   color: inherit;
-  text-decoration: underline dotted;
-  text-decoration-color: var(--text-tertiary);
-  text-underline-offset: 3px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1.5px;
+  font-weight: 500;
   cursor: pointer;
-  position: relative;
+}
+
+.pronoun-trigger:hover {
+  text-decoration-thickness: 2.5px;
 }
 
 .pronoun-trigger:focus-visible {
   outline: 2px solid var(--orange);
   outline-offset: 2px;
   border-radius: 2px;
-}
-
-@media (hover: hover) {
-  .pronoun-trigger::after {
-    content: 'Why they/them?';
-    position: absolute;
-    left: 50%;
-    top: calc(100% + 8px);
-    transform: translateX(-50%);
-    white-space: nowrap;
-    font-family: 'Albert Sans', system-ui, sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-primary);
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    padding: 6px 12px;
-    border-radius: 8px;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.15s, visibility 0.15s;
-    pointer-events: none;
-    z-index: 10;
-  }
-
-  .pronoun-trigger:hover::after {
-    opacity: 1;
-    visibility: visible;
-  }
 }
 
 /* ===== Pronoun modal ===== */
