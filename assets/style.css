@@ -663,8 +663,9 @@ img {
 }
 
 .load-more-label {
-  font-family: 'Fraunces', serif;
-  font-size: 16px;
+  font-family: 'Albert Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--text-secondary);
   letter-spacing: 0.02em;
 }
