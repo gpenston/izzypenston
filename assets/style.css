@@ -1333,6 +1333,10 @@ footer {
 }
 
 @media (max-width: 600px) {
+  .hero {
+    padding: 48px 0 56px;
+  }
+
   .hero-inner {
     flex-direction: column;
     align-items: center;
