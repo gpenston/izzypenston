@@ -12,80 +12,80 @@
     "order": 2
   },
   {
-    "file": "gallery-003.jpg",
+    "file": "gallery-004.jpg",
     "caption": "Bundled up at the playground",
     "wide": true,
     "order": 3
   },
   {
-    "file": "gallery-004.jpg",
-    "caption": "Bundled up at the playground",
-    "wide": true,
-    "order": 4
-  },
-  {
     "file": "gallery-005.jpg",
     "caption": "Little sunflower",
     "wide": true,
-    "order": 5
+    "order": 4
   },
   {
     "file": "gallery-006.jpg",
     "caption": "Bubbles",
     "wide": false,
-    "order": 6
+    "order": 5
   },
   {
     "file": "gallery-007.jpg",
     "caption": "Izzy and Zoe in Hawaii",
     "wide": true,
-    "order": 7
+    "order": 6
   },
   {
     "file": "gallery-008.jpg",
     "caption": "Those blue eyes again",
     "wide": true,
-    "order": 8
+    "order": 7
   },
   {
     "file": "gallery-009.jpg",
     "caption": "Big sister meets baby Owen",
     "wide": true,
-    "order": 9
-  },
-  {
-    "file": "gallery-010.jpg",
-    "caption": "Tiara and feather boa — ready for anything",
-    "wide": false,
-    "order": 10
+    "order": 8
   },
   {
     "file": "gallery-011.jpg",
     "caption": "The rainbow hair era",
     "wide": false,
-    "order": 11
+    "order": 9
   },
   {
     "file": "gallery-012.jpg",
     "caption": "Izzy and Owen — Batman and sidekick",
     "wide": false,
-    "order": 12
+    "order": 10
   },
   {
     "file": "gallery-013.jpg",
     "caption": "Behind the camera",
     "wide": false,
-    "order": 13
+    "order": 11
   },
   {
     "file": "gallery-014.jpg",
     "caption": "Black Butler era",
     "wide": false,
+    "order": 12
+  },
+  {
+    "file": "gallery-019.jpg",
+    "caption": "Trapper hat selfie",
+    "wide": false,
+    "order": 13
+  },
+  {
+    "file": "gallery-018.jpg",
+    "caption": "Turning 15 in a cozy onesie",
+    "wide": false,
     "order": 14
   },
   {
-    "file": "gallery-015.jpg",
-    "caption": "Mabel and Dipper — Gravity Falls cosplay",
+    "file": "gallery-049.jpg",
+    "caption": "Graduation day — ACLC",
     "wide": false,
     "order": 15
   },
@@ -102,63 +102,63 @@
     "order": 17
   },
   {
-    "file": "gallery-018.jpg",
-    "caption": "Turning 15 in a cozy onesie",
+    "file": "gallery-020.jpg",
+    "caption": "Izzy and Mom, early days",
     "wide": false,
     "order": 18
   },
   {
-    "file": "gallery-019.jpg",
-    "caption": "Trapper hat selfie",
+    "file": "gallery-015.jpg",
+    "caption": "Mabel and Dipper — Gravity Falls cosplay",
     "wide": false,
     "order": 19
-  },
-  {
-    "file": "gallery-020.jpg",
-    "caption": "Izzy and Mom, early days",
-    "wide": false,
-    "order": 20
   },
   {
     "file": "gallery-021.jpg",
     "caption": "Izzy and Cecil",
     "wide": false,
-    "order": 21
+    "order": 20
   },
   {
     "file": "gallery-022.jpg",
     "caption": "Izzy and Owen being goofballs",
     "wide": true,
-    "order": 22
+    "order": 21
   },
   {
     "file": "gallery-023.jpg",
     "caption": "Couch cuddles with Nelly",
     "wide": true,
-    "order": 23
+    "order": 22
   },
   {
-    "file": "gallery-024.jpg",
-    "caption": "Best friends",
-    "wide": true,
-    "order": 24
+    "file": "gallery-010.jpg",
+    "caption": "Tiara and feather boa — ready for anything",
+    "wide": false,
+    "order": 23
   },
   {
     "file": "gallery-025.jpg",
     "caption": "Izzy and Owen, portrait day",
     "wide": false,
-    "order": 25
+    "order": 24
   },
   {
     "file": "gallery-026.jpg",
     "caption": "Penston family selfie",
     "wide": false,
-    "order": 26
+    "order": 25
   },
   {
     "file": "gallery-027.jpg",
     "caption": "The creative writer at work",
     "wide": false,
+    "order": 26
+  },
+  {
+    "file": "gallery-024.jpg",
+    "caption": "Best friends",
+    "wide": true,
     "order": 27
   },
   {
@@ -180,62 +180,62 @@
     "order": 30
   },
   {
-    "file": "gallery-031.jpg",
-    "caption": "Izzy and Maeve graduation day",
-    "wide": false,
-    "order": 31
-  },
-  {
     "file": "gallery-032.jpg",
     "caption": "Izzy and Owen at the Golden Gate Bridge",
     "wide": false,
-    "order": 32
+    "order": 31
   },
   {
     "file": "gallery-033.jpg",
     "caption": "Dressed to the nines — Halloween",
     "wide": false,
-    "order": 33
+    "order": 32
   },
   {
     "file": "gallery-034.jpg",
     "caption": "Izzy and Grandma",
     "wide": true,
-    "order": 34
+    "order": 33
   },
   {
     "file": "gallery-035.jpg",
     "caption": "On our way to the White House",
     "wide": false,
+    "order": 34
+  },
+  {
+    "file": "gallery-031.jpg",
+    "caption": "Izzy and Maeve graduation day",
+    "wide": false,
     "order": 35
+  },
+  {
+    "file": "gallery-040.jpg",
+    "caption": "Izzy and Pixel",
+    "wide": false,
+    "order": 36
   },
   {
     "file": "gallery-036.jpg",
     "caption": "Graduation day picnic with friends in the park",
     "wide": false,
-    "order": 36
+    "order": 37
   },
   {
     "file": "gallery-037.jpg",
     "caption": "Maeve kisses",
     "wide": false,
-    "order": 37
+    "order": 38
   },
   {
     "file": "gallery-038.jpg",
     "caption": "That smile",
     "wide": false,
-    "order": 38
+    "order": 39
   },
   {
     "file": "gallery-039.jpg",
     "caption": "Junior prom ready",
-    "wide": false,
-    "order": 39
-  },
-  {
-    "file": "gallery-040.jpg",
-    "caption": "Izzy and Pixel",
     "wide": false,
     "order": 40
   },
@@ -288,171 +288,165 @@
     "order": 48
   },
   {
-    "file": "gallery-049.jpg",
-    "caption": "Graduation day — ACLC",
-    "wide": false,
-    "order": 49
-  },
-  {
     "file": "gallery-050.jpg",
     "caption": "Thumbs up from the sleep study",
     "wide": false,
-    "order": 50
+    "order": 49
   },
   {
     "file": "gallery-051.jpg",
     "caption": "Marina day with the whole crew",
     "wide": false,
-    "order": 51
+    "order": 50
   },
   {
     "file": "gallery-052.jpg",
     "caption": "Teal hair downtown",
     "wide": false,
-    "order": 52
+    "order": 51
   },
   {
     "file": "gallery-053.jpg",
     "caption": "Making friends at the shelter",
     "wide": false,
-    "order": 53
+    "order": 52
   },
   {
     "file": "gallery-054.jpg",
     "caption": "Izzy and Luke",
     "wide": false,
-    "order": 54
+    "order": 53
   },
   {
     "file": "gallery-055.jpg",
     "caption": "All smiles from the hospital bed",
     "wide": false,
-    "order": 55
+    "order": 54
   },
   {
     "file": "gallery-056.jpg",
     "caption": "Izzy and Maeve watching the boats",
     "wide": false,
-    "order": 56
+    "order": 55
   },
   {
     "file": "gallery-057.jpg",
     "caption": "Snoopy’s hometown — Santa Rosa",
     "wide": false,
-    "order": 57
+    "order": 56
   },
   {
     "file": "gallery-058.jpg",
     "caption": "Walking Nelly",
     "wide": false,
-    "order": 58
+    "order": 57
   },
   {
     "file": "gallery-059.jpg",
     "caption": "On stage at Girls Make Games",
     "wide": false,
-    "order": 59
+    "order": 58
   },
   {
     "file": "gallery-060.jpg",
     "caption": "Visitor badge on — Izzy at PlayStation",
     "wide": false,
-    "order": 60
+    "order": 59
   },
   {
     "file": "gallery-061.jpg",
     "caption": "Ice cream at Fenton's",
     "wide": false,
-    "order": 61
+    "order": 60
   },
   {
     "file": "gallery-062.jpg",
     "caption": "So many candles",
     "wide": false,
-    "order": 62
+    "order": 61
   },
   {
     "file": "gallery-063.jpg",
     "caption": "Izzy and Maeve",
     "wide": false,
-    "order": 63
+    "order": 62
   },
   {
     "file": "gallery-064.jpg",
     "caption": "Red hair era",
     "wide": false,
-    "order": 64
+    "order": 63
   },
   {
     "file": "gallery-065.jpg",
     "caption": "Baking crew — Maeve supervising",
     "wide": false,
-    "order": 65
+    "order": 64
   },
   {
     "file": "gallery-066.jpg",
     "caption": "Izzy the puppy whisperer in action",
     "wide": false,
-    "order": 66
+    "order": 65
   },
   {
     "file": "gallery-067.jpg",
     "caption": "Frank and Izzy",
     "wide": false,
-    "order": 67
+    "order": 66
   },
   {
     "file": "gallery-068.jpg",
     "caption": "That grin",
     "wide": false,
-    "order": 68
+    "order": 67
   },
   {
     "file": "gallery-069.jpg",
     "caption": "Orange hair era, Cecil cuddles",
     "wide": false,
-    "order": 69
+    "order": 68
   },
   {
     "file": "gallery-070.jpg",
     "caption": "Repping CureFA",
     "wide": false,
-    "order": 70
+    "order": 69
   },
   {
     "file": "gallery-071.jpg",
     "caption": "Green hair era",
     "wide": false,
-    "order": 71
+    "order": 70
   },
   {
     "file": "gallery-073.jpg",
     "caption": "Family day at the beach",
     "wide": true,
-    "order": 73
+    "order": 71
   },
   {
     "file": "gallery-074.jpg",
     "caption": "Pumpkin patch!",
     "wide": true,
-    "order": 74
+    "order": 72
   },
   {
     "file": "gallery-075.jpg",
     "caption": "Ladybug costume, maximum sass",
     "wide": false,
-    "order": 75
+    "order": 73
   },
   {
     "file": "gallery-076.jpg",
     "caption": "Spa day with Mom",
     "wide": false,
-    "order": 76
+    "order": 74
   },
   {
     "file": "gallery-077.jpg",
     "caption": "Izzy’s 25th birthday",
     "wide": false,
-    "order": 77
+    "order": 75
   }
 ]
