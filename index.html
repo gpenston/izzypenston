@@ -19,12 +19,13 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512.png">
   <link rel="apple-touch-icon" sizes="192x192" href="/assets/favicon-192.png">
-  <link rel="stylesheet" href="/assets/style.css?v=18">
+  <link rel="stylesheet" href="/assets/style.css?v=19">
   <script defer src="/assets/animations.js?v=2"></script>
   <script defer src="/assets/gallery.js?v=3"></script>
   <script defer src="/assets/lightbox.js?v=3"></script>
   <script defer src="/assets/memories.js?v=4"></script>
   <script defer src="/assets/modal.js?v=3"></script>
+  <script defer src="/assets/pronoun-modal.js?v=1"></script>
   <noscript><style>[data-reveal],[data-stagger]{opacity:1;transform:none}</style></noscript>
   <script type="application/ld+json">
   {
@@ -68,7 +69,7 @@
             <div class="hero-label" data-stagger="1">Remembering Izzy</div>
             <h1 data-stagger="2">Izzy Penston</h1>
             <div class="hero-dates" data-stagger="3">November 6, 2000 &ndash; March 25, 2026</div>
-            <p class="hero-intro" data-stagger="4">Known to many as Izzy, and to others as Isaac, they lived fully and authentically in every chapter of their life. A lifelong lover of learning, beloved friend, and community member, Izzy had a gift for bringing laughter and joy to all who knew them.</p>
+            <p class="hero-intro" data-stagger="4">Known to many as Izzy, and to others as Isaac, <button class="pronoun-trigger" id="pronoun-trigger" aria-label="Why they/them? Click to learn more">they</button> lived fully and authentically in every chapter of their life. A lifelong lover of learning, beloved friend, and community member, Izzy had a gift for bringing laughter and joy to all who knew them.</p>
           </div>
         </div>
       </section>
@@ -348,6 +349,15 @@
         <h2 id="modal-thanks-title" style="margin-bottom: 12px;">Thank You</h2>
         <p style="color: var(--text-secondary); line-height: 1.7;">Your memory of Izzy has been received. We&rsquo;ll review it and add it to the page soon.</p>
       </div>
+    </div>
+  </div>
+
+  <!-- Why They/Them modal -->
+  <div class="modal-backdrop" id="pronoun-modal">
+    <div class="modal pronoun-modal" role="dialog" aria-modal="true" aria-labelledby="pronoun-modal-title">
+      <button class="modal-close" id="pronoun-modal-close" aria-label="Close">&times;</button>
+      <h2 id="pronoun-modal-title">Why They/Them?</h2>
+      <p class="pronoun-modal-text">Izzy identified as she/her in her early years, and more recently as he/him, going by both Isaac and Izzy. Izzy was many things: a son, a daughter, a writer, an actor, able-bodied, then a person with disabilities, smart, funny, creative. All of these things, and everything to us. Izzy contained multitudes.</p>
     </div>
   </div>
 
