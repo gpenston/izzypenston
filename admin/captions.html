@@ -327,10 +327,6 @@
       border-bottom: none;
     }
 
-    .photo-row.is-hidden {
-      opacity: 0.35;
-    }
-
     .photo-row.dragging {
       opacity: 0.3;
     }
@@ -417,11 +413,6 @@
       transform: scale(1.05);
     }
 
-    .photo-thumb.wide {
-      width: 160px;
-      min-width: 160px;
-    }
-
     .photo-info {
       flex: 1;
       display: flex;
@@ -459,16 +450,6 @@
       border-radius: 4px;
     }
 
-    .badge-hidden {
-      font-size: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--red);
-      background: color-mix(in srgb, var(--red) 10%, var(--bg));
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
 
     .caption-input {
       font-family: 'Albert Sans', sans-serif;
@@ -492,8 +473,8 @@
       background: color-mix(in srgb, var(--green) 5%, var(--bg-secondary));
     }
 
-    /* --- Hide Toggle --- */
-    .hide-toggle {
+    /* --- Delete Button --- */
+    .delete-btn {
       width: 32px;
       height: 32px;
       border: 1px solid var(--border);
@@ -509,12 +490,7 @@
       align-self: center;
     }
 
-    .hide-toggle:hover {
-      color: var(--text-primary);
-      border-color: var(--text-tertiary);
-    }
-
-    .hide-toggle.is-hidden {
+    .delete-btn:hover {
       color: var(--red);
       border-color: var(--red);
     }
@@ -546,7 +522,7 @@
 
     @media (max-width: 600px) {
       .photo-row { flex-wrap: wrap; }
-      .photo-thumb, .photo-thumb.wide { width: 100%; min-width: unset; height: 200px; }
+      .photo-thumb { width: 100%; min-width: unset; height: 200px; }
       .drag-handle { width: 100%; height: 28px; }
       .header { flex-wrap: wrap; gap: 10px; }
     }
@@ -587,7 +563,7 @@
 
     <!-- Editor Screen -->
     <div id="editor-screen" style="display:none">
-      <p class="intro">Drag to reorder, click the eye to hide/show, edit captions, or upload new photos. Hit <strong>Save Changes</strong> to publish.</p>
+      <p class="intro">Drag to reorder, edit captions, delete photos, or upload new ones. Hit <strong>Save Changes</strong> to publish.</p>
 
       <!-- Upload Area -->
       <div class="upload-area" id="upload-area">
@@ -659,9 +635,7 @@
 
     var GRIP_SVG = '<svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor" aria-hidden="true"><circle cx="3" cy="2" r="1.5"/><circle cx="7" cy="2" r="1.5"/><circle cx="3" cy="8" r="1.5"/><circle cx="7" cy="8" r="1.5"/><circle cx="3" cy="14" r="1.5"/><circle cx="7" cy="14" r="1.5"/></svg>';
 
-    var EYE_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
-
-    var EYE_OFF_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+    var TRASH_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
 
     // ===== Change Tracking =====
 
@@ -684,12 +658,7 @@
         var input = rows[i].querySelector('.caption-input');
         if (input) entry.caption = input.value;
         entry.order = i + 1; // Sequential renumber
-        // Hidden state is already on manifest[idx].hidden
-        if (manifest[idx].hidden) {
-          entry.hidden = true;
-        } else {
-          delete entry.hidden;
-        }
+        delete entry.hidden; // Clean up any legacy hidden field
         updated.push(entry);
       }
       return updated;
@@ -700,37 +669,26 @@
       var rows = grid.querySelectorAll('.photo-row');
       var domOrder = getManifestOrder();
 
+      // Count caption changes
       for (var i = 0; i < rows.length; i++) {
         var idx = parseInt(rows[i].dataset.idx, 10);
         var input = rows[i].querySelector('.caption-input');
         var captionChanged = input && input.value !== (originalManifest[idx] ? originalManifest[idx].caption : '');
-        var hiddenChanged = !!manifest[idx].hidden !== !!(originalManifest[idx] && originalManifest[idx].hidden);
-        var orderChanged = domOrder[i] !== i; // Original order is 0, 1, 2...
-
         if (captionChanged) {
           input.classList.add('changed');
           count++;
         } else if (input) {
           input.classList.remove('changed');
         }
-
-        if (hiddenChanged) count++;
-        if (orderChanged) count++;
       }
 
-      // Deduplicate: if order changed, count it as 1 change not N
+      // Count deletions (manifest shrunk vs original)
+      if (manifest.length !== originalManifest.length) count++;
+
+      // Count order change as 1 change
       var anyOrderChange = false;
       for (var j = 0; j < domOrder.length; j++) {
         if (domOrder[j] !== j) { anyOrderChange = true; break; }
-      }
-
-      // Recount properly
-      count = 0;
-      for (var k = 0; k < rows.length; k++) {
-        var idx2 = parseInt(rows[k].dataset.idx, 10);
-        var inp = rows[k].querySelector('.caption-input');
-        if (inp && inp.value !== (originalManifest[idx2] ? originalManifest[idx2].caption : '')) count++;
-        if (!!manifest[idx2].hidden !== !!(originalManifest[idx2] && originalManifest[idx2].hidden)) count++;
       }
       if (anyOrderChange) count++;
 
@@ -745,19 +703,17 @@
       var html = '';
       for (var i = 0; i < manifest.length; i++) {
         var m = manifest[i];
-        var isHidden = !!m.hidden;
-        html += '<div class="photo-row' + (isHidden ? ' is-hidden' : '') + '" data-idx="' + i + '">';
+        html += '<div class="photo-row" data-idx="' + i + '">';
         html += '<div class="drag-handle" aria-label="Drag to reorder">' + GRIP_SVG + '</div>';
-        html += '<img class="photo-thumb' + (m.wide ? ' wide' : '') + '" src="/assets/photos/' + m.file + '" alt="" loading="lazy" onclick="window.open(\'/assets/photos/' + m.file + '\', \'_blank\')">';
+        html += '<img class="photo-thumb" src="/assets/photos/' + m.file + '" alt="" loading="lazy" onclick="window.open(\'/assets/photos/' + m.file + '\', \'_blank\')">';
         html += '<div class="photo-info">';
         html += '<div class="photo-meta"><span class="photo-file">' + m.file + '</span>';
         html += '<div class="photo-badges">';
         if (m.wide) html += '<span class="badge-wide">wide</span>';
-        if (isHidden) html += '<span class="badge-hidden">hidden</span>';
         html += '</div></div>';
         html += '<input class="caption-input" type="text" value="' + escAttr(m.caption) + '" placeholder="Add a caption&hellip;">';
         html += '</div>';
-        html += '<button class="hide-toggle' + (isHidden ? ' is-hidden' : '') + '" data-hide-idx="' + i + '" aria-label="' + (isHidden ? 'Show photo' : 'Hide photo') + '" title="' + (isHidden ? 'Show photo' : 'Hide photo') + '">' + (isHidden ? EYE_OFF_SVG : EYE_SVG) + '</button>';
+        html += '<button class="delete-btn" data-del-idx="' + i + '" aria-label="Delete photo" title="Delete photo">' + TRASH_SVG + '</button>';
         html += '</div>';
       }
       grid.innerHTML = html;
@@ -767,37 +723,15 @@
         if (e.target.classList.contains('caption-input')) countChanges();
       });
 
-      // Hide toggle listener
+      // Delete button listener
       grid.addEventListener('click', function (e) {
-        var toggleBtn = e.target.closest('.hide-toggle');
-        if (!toggleBtn) return;
-        var idx = parseInt(toggleBtn.dataset.hideIdx, 10);
-        manifest[idx].hidden = !manifest[idx].hidden;
-        var row = toggleBtn.closest('.photo-row');
-        var badges = row.querySelector('.photo-badges');
-
-        if (manifest[idx].hidden) {
-          row.classList.add('is-hidden');
-          toggleBtn.classList.add('is-hidden');
-          toggleBtn.innerHTML = EYE_OFF_SVG;
-          toggleBtn.setAttribute('aria-label', 'Show photo');
-          toggleBtn.setAttribute('title', 'Show photo');
-          if (!badges.querySelector('.badge-hidden')) {
-            var badge = document.createElement('span');
-            badge.className = 'badge-hidden';
-            badge.textContent = 'hidden';
-            badges.appendChild(badge);
-          }
-        } else {
-          row.classList.remove('is-hidden');
-          toggleBtn.classList.remove('is-hidden');
-          toggleBtn.innerHTML = EYE_SVG;
-          toggleBtn.setAttribute('aria-label', 'Hide photo');
-          toggleBtn.setAttribute('title', 'Hide photo');
-          var hb = badges.querySelector('.badge-hidden');
-          if (hb) hb.remove();
-        }
-
+        var delBtn = e.target.closest('.delete-btn');
+        if (!delBtn) return;
+        var idx = parseInt(delBtn.dataset.delIdx, 10);
+        var file = manifest[idx].file;
+        if (!confirm('Delete ' + file + '? This cannot be undone after saving.')) return;
+        manifest.splice(idx, 1);
+        renderGrid();
         countChanges();
       });
 
