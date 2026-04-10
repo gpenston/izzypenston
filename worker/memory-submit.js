@@ -203,17 +203,15 @@ async function handleSubmit(request, env) {
     return json({ ok: false, error: 'One or more fields exceed the maximum length.' }, 400);
   }
 
-  // Commit photos first (in parallel) — failures are non-fatal
+  // Commit photos sequentially — GitHub Contents API rejects concurrent writes to the same repo
   const photoUrls = [];
-  if (photoFiles.length > 0) {
+  for (let i = 0; i < photoFiles.length; i++) {
     try {
-      const results = await Promise.all(
-        photoFiles.map((f, i) => commitPhoto(f.arrayBuffer, i, name, env))
-      );
-      results.forEach(url => { if (url) photoUrls.push(url); });
+      const url = await commitPhoto(photoFiles[i].arrayBuffer, i, name, env);
+      if (url) photoUrls.push(url);
     } catch (err) {
       console.error('Photo upload error:', err);
-      // Continue — submit the memory without photos
+      // Non-fatal — continue with remaining photos
     }
   }
 
