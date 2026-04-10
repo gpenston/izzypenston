@@ -3,7 +3,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Albert+Sans:wght@400;500;600&display=swap');
 
 .mobile-br { display: none; }
-@media (max-width: 600px) { .mobile-br { display: block; } }
+.mobile-only { display: none; }
+@media (max-width: 600px) { .mobile-br { display: block; } .mobile-only { display: inline; } .desktop-only { display: none; } }
 
 /* ===== Design Tokens ===== */
 :root {
