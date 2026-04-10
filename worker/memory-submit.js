@@ -74,7 +74,7 @@ async function commitPhoto(arrayBuffer, index, name, env) {
   const res = await githubFetch(`/contents/${path}`, env, {
     method: 'PUT',
     body: JSON.stringify({
-      message: `Add photo from ${name}`,
+      message: `Add photo from ${name.replace(/[^\w\s'-]/g, '').slice(0, 50)}`,
       content: base64
     })
   });
@@ -86,6 +86,27 @@ async function commitPhoto(arrayBuffer, index, name, env) {
   }
 
   return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${path}`;
+}
+
+// --- Input validation ---
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_PHOTO_BYTES = 1024 * 1024; // 1 MB
+
+// JPEG: FF D8 FF, PNG: 89 50 4E 47, WebP: RIFF....WEBP
+function hasValidImageHeader(buf) {
+  const b = new Uint8Array(buf.slice(0, 12));
+  if (b[0] === 0xFF && b[1] === 0xD8 && b[2] === 0xFF) return true;
+  if (b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4E && b[3] === 0x47) return true;
+  if (b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46 &&
+      b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50) return true;
+  return false;
+}
+
+function sanitizeString(str) {
+  if (typeof str !== 'string') return '';
+  // Strip control characters (keep newlines/tabs for message field)
+  return str.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '').trim();
 }
 
 // --- Spam detection ---
@@ -148,11 +169,19 @@ async function handleSubmit(request, env) {
         const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
         if (validTypes.includes(file.type)) {
           const buf = await file.arrayBuffer();
+          if (buf.byteLength > MAX_PHOTO_BYTES) continue;
+          if (!hasValidImageHeader(buf)) continue;
           photoFiles.push({ arrayBuffer: buf, type: file.type });
         }
       }
     }
   }
+
+  // Sanitize all text inputs
+  name = sanitizeString(name);
+  email = sanitizeString(email);
+  relation = sanitizeString(relation);
+  message = sanitizeString(message);
 
   // Spam check — silently succeed so bots don't retry with different content
   if (isSpam({ name, relation, message, website })) {
@@ -162,6 +191,11 @@ async function handleSubmit(request, env) {
   // Validate required fields
   if (!name || !email || !message) {
     return json({ ok: false, error: 'Name, email, and message are required.' }, 400);
+  }
+
+  // Validate email format
+  if (!EMAIL_RE.test(email)) {
+    return json({ ok: false, error: 'Please provide a valid email address.' }, 400);
   }
 
   // Enforce field length limits
