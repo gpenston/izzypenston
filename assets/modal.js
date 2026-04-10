@@ -182,6 +182,9 @@
         if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Share Memory'; }
         alert('Something went wrong. Please try again or email your memory to memories@izzypenston.com.');
       });
+    }).catch(function () {
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Share Memory'; }
+      alert('Something went wrong. Please try again or email your memory to memories@izzypenston.com.');
     });
   }
 

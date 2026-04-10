@@ -329,6 +329,7 @@
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         Admin
       </a>
+      <button id="logout-btn" class="btn-back" style="display:none; cursor:pointer; background:transparent;">Log Out</button>
     </div>
   </div>
 
@@ -357,7 +358,7 @@
   <script>
   (function () {
     var API_BASE = 'https://izzypenston.com/api/admin';
-    var pin = localStorage.getItem('admin_pin') || '';
+    var pin = sessionStorage.getItem('admin_pin') || '';
     var manifest = [];
     var originals = {};
     var saving = false;
@@ -461,7 +462,7 @@
       })
         .then(function (r) {
           if (r.status === 401) {
-            localStorage.removeItem('admin_pin');
+            sessionStorage.removeItem('admin_pin');
             pin = '';
             pinScreen.style.display = '';
             editorScreen.style.display = 'none';
@@ -516,10 +517,11 @@
           pin = '';
           return;
         }
-        localStorage.setItem('admin_pin', pin);
+        sessionStorage.setItem('admin_pin', pin);
         pinScreen.style.display = 'none';
         editorScreen.style.display = '';
         pinError.style.display = 'none';
+        logoutBtn.style.display = '';
         loadManifest();
       });
     }
@@ -529,10 +531,23 @@
       if (e.key === 'Enter') tryPin();
     });
 
+    // Logout
+    var logoutBtn = document.getElementById('logout-btn');
+    logoutBtn.addEventListener('click', function () {
+      sessionStorage.removeItem('admin_pin');
+      pin = '';
+      editorScreen.style.display = 'none';
+      pinScreen.style.display = '';
+      logoutBtn.style.display = 'none';
+      pinInput.value = '';
+      pinInput.focus();
+    });
+
     // Auto-start if PIN is saved
     if (pin) {
       pinScreen.style.display = 'none';
       editorScreen.style.display = '';
+      logoutBtn.style.display = '';
       loadManifest();
     }
   }());

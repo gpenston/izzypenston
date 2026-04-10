@@ -729,11 +729,13 @@ img {
   font-weight: 600;
   font-size: 15px;
   color: var(--text-primary);
+  margin-bottom: 10px;
 }
 
 .memory-relation {
   font-size: 13px;
   color: var(--text-tertiary);
+  margin-top: -6px;
   margin-bottom: 10px;
 }
 

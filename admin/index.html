@@ -373,6 +373,7 @@
         View Site
       </a>
       <span class="badge" id="badge" style="display:none">0</span>
+      <button id="logout-btn" style="display:none; font-family:'Albert Sans',sans-serif; font-size:13px; font-weight:600; color:var(--text-secondary); background:transparent; border:1px solid var(--border); padding:6px 14px; border-radius:8px; cursor:pointer; transition:color 0.2s, border-color 0.2s;" onmouseover="this.style.color='var(--red)';this.style.borderColor='var(--red)'" onmouseout="this.style.color='var(--text-secondary)';this.style.borderColor='var(--border)'">Log Out</button>
     </div>
   </div>
 
@@ -404,7 +405,7 @@
   <script>
   (function () {
     var API_BASE = 'https://izzypenston.com/api/admin';
-    var pin = localStorage.getItem('admin_pin') || '';
+    var pin = sessionStorage.getItem('admin_pin') || '';
     var activeTab = 'pending';
 
     var pinScreen = document.getElementById('pin-screen');
@@ -424,8 +425,14 @@
     var publishedCount = document.getElementById('published-count');
     var archivedCount = document.getElementById('archived-count');
 
+    var logoutBtn = document.getElementById('logout-btn');
+
     function showStatus(msg, type) {
-      status.innerHTML = '<div class="status-msg ' + type + '">' + msg + '</div>';
+      var div = document.createElement('div');
+      div.className = 'status-msg ' + type;
+      div.textContent = msg;
+      status.innerHTML = '';
+      status.appendChild(div);
       setTimeout(function () { status.innerHTML = ''; }, 4000);
     }
 
@@ -463,7 +470,7 @@
       }
       return fetch(API_BASE + path, opts).then(function (r) {
         if (r.status === 401) {
-          localStorage.removeItem('admin_pin');
+          sessionStorage.removeItem('admin_pin');
           pin = '';
           pinScreen.style.display = '';
           mainScreen.style.display = 'none';
@@ -769,10 +776,11 @@
       var val = pinInput.value.trim();
       if (!val) return;
       pin = val;
-      localStorage.setItem('admin_pin', pin);
+      sessionStorage.setItem('admin_pin', pin);
       pinScreen.style.display = 'none';
       mainScreen.style.display = '';
       pinError.style.display = 'none';
+      logoutBtn.style.display = '';
       loadPending();
     }
 
@@ -781,10 +789,22 @@
       if (e.key === 'Enter') tryPin();
     });
 
+    // Logout
+    logoutBtn.addEventListener('click', function () {
+      sessionStorage.removeItem('admin_pin');
+      pin = '';
+      mainScreen.style.display = 'none';
+      pinScreen.style.display = '';
+      logoutBtn.style.display = 'none';
+      pinInput.value = '';
+      pinInput.focus();
+    });
+
     // Auto-start if PIN is saved
     if (pin) {
       pinScreen.style.display = 'none';
       mainScreen.style.display = '';
+      logoutBtn.style.display = '';
       loadPending();
     }
   }());

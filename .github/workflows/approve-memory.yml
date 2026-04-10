@@ -80,11 +80,14 @@ jobs:
             core.exportVariable('ISSUE_NUMBER', context.payload.issue.number);
 
       - name: Commit and push
+        env:
+          SAFE_NAME: ${{ env.MEMORY_NAME }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add assets/memories.json
-          git commit -m "Add memory from ${MEMORY_NAME}"
+          # Use printf to safely pass the name without shell interpretation
+          git commit -m "$(printf 'Add memory from %s' "$SAFE_NAME")"
           for i in 1 2 3; do
             git push && break
             echo "Push failed, retrying ($i/3)..."

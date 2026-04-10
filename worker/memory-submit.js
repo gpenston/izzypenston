@@ -19,22 +19,47 @@ const GITHUB_API = 'https://api.github.com';
 
 // --- Helpers ---
 
-function json(data, status = 200) {
+const ALLOWED_ORIGIN = 'https://izzypenston.com';
+
+function getCorsOrigin(request) {
+  const origin = request ? request.headers.get('Origin') : null;
+  return origin === ALLOWED_ORIGIN ? ALLOWED_ORIGIN : ALLOWED_ORIGIN;
+}
+
+function json(data, status = 200, request = null) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': getCorsOrigin(request) }
   });
 }
 
-function corsHeaders() {
+function corsHeaders(request) {
   return new Response(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': getCorsOrigin(request),
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Pin'
     }
   });
+}
+
+// Timing-safe string comparison to prevent timing attacks on PIN
+function timingSafeEqual(a, b) {
+  if (typeof a !== 'string' || typeof b !== 'string') return false;
+  const encoder = new TextEncoder();
+  const aBuf = encoder.encode(a);
+  const bBuf = encoder.encode(b);
+  if (aBuf.length !== bBuf.length) {
+    // Pad shorter to match length, then compare (constant-time regardless)
+    const dummy = encoder.encode(a.padEnd(b.length, '\0'));
+    let result = 0;
+    for (let i = 0; i < dummy.length; i++) result |= dummy[i] ^ bBuf[i];
+    return false;
+  }
+  let result = 0;
+  for (let i = 0; i < aBuf.length; i++) result |= aBuf[i] ^ bBuf[i];
+  return result === 0;
 }
 
 async function githubFetch(path, env, options = {}) {
@@ -483,7 +508,7 @@ export default {
 
     // CORS preflight
     if (request.method === 'OPTIONS') {
-      return corsHeaders();
+      return corsHeaders(request);
     }
 
     // Public: form submission
@@ -494,8 +519,8 @@ export default {
     // Admin routes — require PIN
     if (path.startsWith('/api/admin/')) {
       const pin = request.headers.get('X-Admin-Pin');
-      if (!pin || pin !== env.ADMIN_PIN) {
-        return json({ ok: false, error: 'Unauthorized' }, 401);
+      if (!pin || !timingSafeEqual(pin, env.ADMIN_PIN)) {
+        return json({ ok: false, error: 'Unauthorized' }, 401, request);
       }
 
       if (path === '/api/admin/pending' && request.method === 'GET') {
@@ -530,6 +555,6 @@ export default {
       }
     }
 
-    return json({ error: 'Not found' }, 404);
+    return json({ error: 'Not found' }, 404, request);
   }
 };
