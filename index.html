@@ -311,23 +311,23 @@
           <div class="form-row">
             <div class="form-group">
               <label for="memory-name">Your Name *</label>
-              <input type="text" id="memory-name" name="name" class="form-input" required>
+              <input type="text" id="memory-name" name="name" class="form-input" required maxlength="100">
             </div>
 
             <div class="form-group">
               <label for="memory-relation">Relationship to Izzy</label>
-              <input type="text" id="memory-relation" name="relation" class="form-input" placeholder="Friend, classmate&hellip;">
+              <input type="text" id="memory-relation" name="relation" class="form-input" placeholder="Friend, classmate&hellip;" maxlength="100">
             </div>
           </div>
 
           <div class="form-group">
             <label for="memory-email">Email * <span class="form-hint-inline">(private &mdash; not displayed)</span></label>
-            <input type="email" id="memory-email" name="email" class="form-input" required>
+            <input type="email" id="memory-email" name="email" class="form-input" required maxlength="254">
           </div>
 
           <div class="form-group">
             <label for="memory-text">Your Memory *</label>
-            <textarea id="memory-text" name="message" class="form-textarea" required placeholder="Share a favorite memory, story, or what Izzy meant to you&hellip;"></textarea>
+            <textarea id="memory-text" name="message" class="form-textarea" required maxlength="2000" placeholder="Share a favorite memory, story, or what Izzy meant to you&hellip;"></textarea>
           </div>
 
           <div class="form-group">

@@ -164,6 +164,11 @@ async function handleSubmit(request, env) {
     return json({ ok: false, error: 'Name, email, and message are required.' }, 400);
   }
 
+  // Enforce field length limits
+  if (name.length > 100 || (relation && relation.length > 100) || email.length > 254 || message.length > 2000) {
+    return json({ ok: false, error: 'One or more fields exceed the maximum length.' }, 400);
+  }
+
   // Commit photos first (in parallel) — failures are non-fatal
   const photoUrls = [];
   if (photoFiles.length > 0) {
