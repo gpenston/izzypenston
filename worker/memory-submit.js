@@ -74,7 +74,7 @@ async function sendNotification(env, { name, relation, message, email }) {
     },
     body: JSON.stringify({
       from: 'memories@izzypenston.com',
-      to: ['gpenston@me.com', 'zozomay@gmail.com'],
+      to: ['gpenston@gmail.com', 'zozomay@gmail.com'],
       subject,
       html
     })
