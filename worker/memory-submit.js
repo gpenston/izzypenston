@@ -239,7 +239,8 @@ async function handleSubmit(request, env) {
     body: JSON.stringify({
       title: `Memory from ${name}`,
       body: body,
-      labels: ['memory', 'pending']
+      labels: ['memory', 'pending'],
+      assignees: ['gpenston']
     })
   });
 

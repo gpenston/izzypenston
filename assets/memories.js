@@ -108,8 +108,6 @@
 
   // ===== Photo pile =====
 
-  // Paperclip SVG path
-  var PAPERCLIP_SVG = '<svg class="pile-clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>';
 
   function createPhotoPile(photos, cardEl) {
     if (!photos || photos.length === 0) return null;
@@ -136,13 +134,7 @@
       stack.appendChild(img);
     });
 
-    pile.innerHTML = PAPERCLIP_SVG;
     pile.appendChild(stack);
-
-    var labelEl = document.createElement('span');
-    labelEl.className = 'pile-label';
-    labelEl.textContent = label;
-    pile.appendChild(labelEl);
 
     function open() {
       if (!openMemoryLightbox) {
@@ -172,6 +164,12 @@
       div.style.transform = 'rotate(' + deg + 'deg)';
     }
 
+    // Photo pile floats right — must be in DOM before text so content wraps around it
+    if (memory.photos && memory.photos.length > 0) {
+      var pile = createPhotoPile(memory.photos, div);
+      if (pile) div.appendChild(pile);
+    }
+
     var name = document.createElement('div');
     name.className = 'memory-name';
     name.textContent = memory.name;
@@ -180,7 +178,7 @@
     if (memory.relation) {
       var rel = document.createElement('div');
       rel.className = 'memory-relation';
-      rel.textContent = memory.relation;
+      rel.textContent = memory.relation.charAt(0).toUpperCase() + memory.relation.slice(1);
       div.appendChild(rel);
     }
 
@@ -189,19 +187,39 @@
     text.textContent = memory.text;
     div.appendChild(text);
 
-    if (memory.photos && memory.photos.length > 0) {
-      var pile = createPhotoPile(memory.photos, div);
-      if (pile) div.appendChild(pile);
-    }
-
     return div;
+  }
+
+  function truncateIfNeeded(card) {
+    var text = card.querySelector('.memory-text');
+    if (!text) return;
+    // Apply truncation class to measure
+    text.classList.add('memory-text-truncated');
+    if (text.scrollHeight <= text.clientHeight) {
+      // Fits fine — remove class
+      text.classList.remove('memory-text-truncated');
+      return;
+    }
+    var btn = document.createElement('button');
+    btn.className = 'memory-more';
+    btn.textContent = 'More';
+    btn.addEventListener('click', function () {
+      text.classList.remove('memory-text-truncated');
+      btn.remove();
+    });
+    text.insertAdjacentElement('afterend', btn);
   }
 
   function renderBatch() {
     var end = Math.min(shown + BATCH_SIZE, memories.length);
+    var newCards = [];
     for (var i = shown; i < end; i++) {
-      list.appendChild(createCard(memories[i], i));
+      var card = createCard(memories[i], i);
+      list.appendChild(card);
+      newCards.push(card);
     }
+    // Truncate after DOM insertion so scrollHeight is measurable
+    newCards.forEach(truncateIfNeeded);
     shown = end;
     if (btnWrap) {
       btnWrap.style.display = shown >= memories.length ? 'none' : '';

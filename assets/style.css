@@ -744,16 +744,46 @@ img {
   margin: 0;
 }
 
-/* ===== Memory photo pile ===== */
-.memory-card.has-photos {
+.memory-text-truncated {
+  max-height: 258px;
+  overflow: clip; /* clips without creating a new block formatting context, preserving float wrapping */
   position: relative;
-  padding-right: 108px;
 }
 
-.memory-photo-pile {
+.memory-text-truncated::after {
+  content: '';
   position: absolute;
-  top: 20px;
-  right: 20px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background: linear-gradient(to bottom, transparent, var(--bg-secondary));
+  pointer-events: none;
+}
+
+.memory-more {
+  display: block;
+  margin-top: 6px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.memory-more:hover {
+  color: var(--text-primary);
+}
+
+/* ===== Memory photo pile ===== */
+.memory-photo-pile {
+  float: right;
+  margin: 0 0 8px 16px;
   cursor: pointer;
   user-select: none;
   text-align: center;
@@ -761,8 +791,8 @@ img {
 
 .pile-stack {
   position: relative;
-  width: 72px;
-  height: 72px;
+  width: 88px;
+  height: 88px;
   transition: transform 0.15s;
 }
 
@@ -773,8 +803,8 @@ img {
 .pile-img {
   position: absolute;
   inset: 0;
-  width: 72px;
-  height: 72px;
+  width: 88px;
+  height: 88px;
   object-fit: cover;
   border-radius: 8px;
   border: 2px solid var(--bg);
@@ -805,25 +835,6 @@ img {
   z-index: 3;
 }
 
-.pile-clip {
-  position: absolute;
-  top: -12px;
-  left: -8px;
-  z-index: 10;
-  color: var(--text-tertiary);
-  width: 16px;
-  height: 16px;
-  pointer-events: none;
-}
-
-.pile-label {
-  display: block;
-  font-size: 11px;
-  color: var(--text-tertiary);
-  margin-top: 8px;
-  text-align: center;
-  letter-spacing: 0.01em;
-}
 
 /* ===== Memory lightbox ===== */
 .mlb-backdrop {
@@ -1166,7 +1177,7 @@ img {
 
 /* ===== Footer ===== */
 footer {
-  padding: 56px 0;
+  padding: 40px 0;
   text-align: center;
   background: var(--bg-secondary);
   border-top: 1px solid var(--border);
