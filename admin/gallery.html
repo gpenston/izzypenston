@@ -48,34 +48,36 @@
       min-height: 100vh;
     }
 
-    .header {
+    .admin-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
       padding: 20px 24px;
+      background: var(--bg);
       border-bottom: 1px solid var(--border);
+    }
+
+    .admin-nav-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: sticky;
-      top: 0;
-      background: var(--bg);
-      z-index: 10;
+      max-width: 900px;
+      margin: 0 auto;
     }
 
-    .header h1 {
-      font-family: 'Fraunces', serif;
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .header h1 a {
-      display: inline-flex;
+    .nav-wordmark {
+      display: flex;
       align-items: center;
       gap: 6px;
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--text-primary);
       text-decoration: none;
-      color: inherit;
       transition: color 0.2s ease;
     }
 
-    .header h1 a:hover { color: var(--orange); }
+    .nav-wordmark:hover { color: var(--orange); }
 
     .nav-star {
       width: 14px;
@@ -89,12 +91,65 @@
       transition: fill 0.2s ease;
     }
 
-    .header h1 a:hover .nav-star polygon { fill: var(--orange); }
+    .nav-wordmark:hover .nav-star polygon { fill: var(--orange); }
 
-    .header-actions {
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 400;
+      padding-bottom: 2px;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      color: var(--orange);
+      border-bottom-color: var(--orange);
+    }
+
+    .nav-links a.is-active {
+      color: var(--orange);
+      font-weight: 600;
+      border-bottom-color: var(--orange);
+    }
+
+    .nav-links .nav-logout {
+      font-family: 'Albert Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text-secondary);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 0 0 2px 0;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .nav-links .nav-logout:hover {
+      color: var(--red);
+      border-bottom-color: var(--red);
+    }
+
+    @media (max-width: 600px) {
+      .nav-links { gap: 16px; }
+      .nav-links a { font-size: 13px; }
+      .nav-links .nav-logout { font-size: 13px; }
+    }
+
+    .page-actions {
       display: flex;
       gap: 10px;
       align-items: center;
+      margin-bottom: 16px;
     }
 
     .btn {
@@ -121,25 +176,6 @@
     .btn-upload {
       background: var(--blue);
       color: white;
-    }
-
-    .btn-back {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      border: 1px solid var(--border);
-      padding: 6px 14px;
-      border-radius: 8px;
-      transition: color 0.2s, border-color 0.2s;
-    }
-
-    .btn-back:hover {
-      color: var(--orange);
-      border-color: var(--orange);
     }
 
     .change-count {
@@ -536,19 +572,17 @@
 </head>
 <body>
 
-  <div class="header">
-    <h1><a href="/admin/"><svg class="nav-star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" aria-hidden="true"><polygon points="50,6 61.8,33.8 91.8,36.4 69,56.2 75.9,85.6 50,70 24.1,85.6 31,56.2 8.2,36.4 38.2,33.8" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/></svg>Izzy</a> Gallery</h1>
-    <div class="header-actions">
-      <span class="change-count" id="change-count"></span>
-      <button class="btn btn-save" id="btn-save" style="display:none">Save Changes</button>
-      <button class="btn btn-upload" id="btn-toggle-upload" style="display:none">Upload Photos</button>
-      <a href="/admin/" class="btn-back">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-        Admin
-      </a>
-      <button id="logout-btn" class="btn-back" style="display:none; cursor:pointer; background:transparent;">Log Out</button>
+  <nav class="admin-nav" aria-label="Admin navigation">
+    <div class="admin-nav-inner">
+      <a href="/admin/" class="nav-wordmark"><svg class="nav-star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" aria-hidden="true"><polygon points="50,6 61.8,33.8 91.8,36.4 69,56.2 75.9,85.6 50,70 24.1,85.6 31,56.2 8.2,36.4 38.2,33.8" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/></svg>Izzy</a>
+      <ul class="nav-links">
+        <li><a href="/admin/">Memory</a></li>
+        <li><a href="/admin/gallery.html" class="is-active">Gallery</a></li>
+        <li><a href="https://izzypenston.com">View Site</a></li>
+        <li id="logout-li" style="display:none"><button id="logout-btn" class="nav-logout">Log Out</button></li>
+      </ul>
     </div>
-  </div>
+  </nav>
 
   <div class="container">
     <!-- PIN Screen -->
@@ -563,6 +597,11 @@
 
     <!-- Editor Screen -->
     <div id="editor-screen" style="display:none">
+      <div class="page-actions">
+        <span class="change-count" id="change-count"></span>
+        <button class="btn btn-save" id="btn-save" style="display:none">Save Changes</button>
+        <button class="btn btn-upload" id="btn-toggle-upload" style="display:none">Upload Photos</button>
+      </div>
       <p class="intro">Drag to reorder, edit captions, delete photos, or upload new ones. Hit <strong>Save Changes</strong> to publish.</p>
 
       <!-- Upload Area -->
@@ -611,6 +650,7 @@
     var btnDoUpload = document.getElementById('btn-do-upload');
     var uploadStatus = document.getElementById('upload-status');
     var logoutBtn = document.getElementById('logout-btn');
+    var logoutLi = document.getElementById('logout-li');
 
     // Upload state
     var uploadFiles = [];
@@ -1126,7 +1166,7 @@
         pinScreen.style.display = 'none';
         editorScreen.style.display = '';
         pinError.style.display = 'none';
-        logoutBtn.style.display = '';
+        logoutLi.style.display = '';
         btnToggleUpload.style.display = '';
         loadManifest();
       });
@@ -1143,7 +1183,7 @@
       pin = '';
       editorScreen.style.display = 'none';
       pinScreen.style.display = '';
-      logoutBtn.style.display = 'none';
+      logoutLi.style.display = 'none';
       btnToggleUpload.style.display = 'none';
       pinInput.value = '';
       pinInput.focus();
@@ -1153,7 +1193,7 @@
     if (pin) {
       pinScreen.style.display = 'none';
       editorScreen.style.display = '';
-      logoutBtn.style.display = '';
+      logoutLi.style.display = '';
       btnToggleUpload.style.display = '';
       loadManifest();
     }
