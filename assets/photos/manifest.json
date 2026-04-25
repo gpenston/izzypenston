@@ -84,14 +84,14 @@
     "order": 14
   },
   {
-    "file": "gallery-049.jpg",
-    "caption": "Graduation day — ACLC",
+    "file": "gallery-077.jpg",
+    "caption": "Izzy’s 25th birthday",
     "wide": false,
     "order": 15
   },
   {
-    "file": "gallery-077.jpg",
-    "caption": "Izzy’s 25th birthday",
+    "file": "gallery-049.jpg",
+    "caption": "Graduation day — ACLC",
     "wide": false,
     "order": 16
   },
@@ -234,20 +234,20 @@
     "order": 39
   },
   {
-    "file": "gallery-037.jpg",
-    "caption": "Maeve kisses",
+    "file": "gallery-039.jpg",
+    "caption": "Junior prom ready",
     "wide": false,
     "order": 40
   },
   {
-    "file": "gallery-038.jpg",
-    "caption": "That smile",
+    "file": "gallery-037.jpg",
+    "caption": "Maeve kisses",
     "wide": false,
     "order": 41
   },
   {
-    "file": "gallery-039.jpg",
-    "caption": "Junior prom ready",
+    "file": "gallery-038.jpg",
+    "caption": "That smile",
     "wide": false,
     "order": 42
   },
@@ -324,33 +324,33 @@
     "order": 54
   },
   {
-    "file": "gallery-068.jpg",
-    "caption": "That grin",
-    "wide": false,
+    "file": "gallery-073.jpg",
+    "caption": "Family day at the beach",
+    "wide": true,
     "order": 55
-  },
-  {
-    "file": "gallery-069.jpg",
-    "caption": "Orange hair era, Cecil cuddles",
-    "wide": false,
-    "order": 56
-  },
-  {
-    "file": "gallery-070.jpg",
-    "caption": "Repping CureFA",
-    "wide": false,
-    "order": 57
   },
   {
     "file": "gallery-071.jpg",
     "caption": "Green hair era",
     "wide": false,
+    "order": 56
+  },
+  {
+    "file": "gallery-068.jpg",
+    "caption": "That grin",
+    "wide": false,
+    "order": 57
+  },
+  {
+    "file": "gallery-069.jpg",
+    "caption": "Orange hair era, Cecil cuddles",
+    "wide": false,
     "order": 58
   },
   {
-    "file": "gallery-073.jpg",
-    "caption": "Family day at the beach",
-    "wide": true,
+    "file": "gallery-070.jpg",
+    "caption": "Repping CureFA",
+    "wide": false,
     "order": 59
   },
   {
@@ -364,101 +364,5 @@
     "caption": "Ladybug costume, maximum sass",
     "wide": false,
     "order": 61
-  },
-  {
-    "file": "gallery-076.jpg",
-    "caption": "Spa day with Mom",
-    "wide": false,
-    "order": 62
-  },
-  {
-    "file": "gallery-1776275612476-6gc3pw.jpg",
-    "caption": "Izzy and Pepe, Philadelphia Zoo",
-    "wide": false,
-    "order": 63
-  },
-  {
-    "file": "gallery-1776275615092-5vk5bh.jpg",
-    "caption": "Izzy's Angels fundraiser",
-    "wide": false,
-    "order": 64
-  },
-  {
-    "file": "gallery-1776275617880-9y7mq7.jpg",
-    "caption": "24th Birthday",
-    "wide": false,
-    "order": 65
-  },
-  {
-    "file": "gallery-1776275620868-tslaha.jpg",
-    "caption": "The puppy whisperer",
-    "wide": false,
-    "order": 66
-  },
-  {
-    "file": "gallery-1776275626397-84abwg.jpg",
-    "caption": "Central Park 2011",
-    "wide": false,
-    "order": 67
-  },
-  {
-    "file": "gallery-1776275629012-ilwje5.jpg",
-    "caption": "Make a Wish trip",
-    "wide": false,
-    "order": 68
-  },
-  {
-    "file": "gallery-1776963491401-5yfdr1.jpg",
-    "caption": "",
-    "wide": false,
-    "order": 69
-  },
-  {
-    "file": "gallery-1776963494559-kt4e3u.jpg",
-    "caption": "",
-    "wide": false,
-    "order": 70
-  },
-  {
-    "file": "gallery-1776963497275-u8vfxc.jpg",
-    "caption": "",
-    "wide": false,
-    "order": 71
-  },
-  {
-    "file": "gallery-1776963499846-lwt9iu.jpg",
-    "caption": "",
-    "wide": false,
-    "order": 72
-  },
-  {
-    "file": "gallery-1776963502226-kebdkb.jpg",
-    "caption": "",
-    "wide": false,
-    "order": 73
-  },
-  {
-    "file": "gallery-1776963504910-4nmuvj.jpg",
-    "caption": "",
-    "wide": false,
-    "order": 74
-  },
-  {
-    "file": "gallery-1776963507544-v7i4y5.jpg",
-    "caption": "",
-    "wide": false,
-    "order": 75
-  },
-  {
-    "file": "gallery-1776963510530-x6eius.jpg",
-    "caption": "",
-    "wide": false,
-    "order": 76
-  },
-  {
-    "file": "gallery-1776963513101-ceazx3.jpg",
-    "caption": "",
-    "wide": true,
-    "order": 77
   }
 ]
