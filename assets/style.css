@@ -782,6 +782,16 @@ img {
   color: var(--text-primary);
 }
 
+/* Whole card is the expand target when truncated */
+.memory-card.is-expandable {
+  cursor: pointer;
+}
+
+/* Photo pile keeps its own cursor regardless */
+.memory-card.is-expandable .memory-photo-pile {
+  cursor: pointer;
+}
+
 /* ===== Memory photo pile ===== */
 .memory-photo-pile {
   float: right;

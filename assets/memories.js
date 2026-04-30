@@ -198,14 +198,26 @@
       text.classList.remove('memory-text-truncated');
       return;
     }
+
+    // Whole card (minus photo pile) is the tap/click target
+    card.classList.add('is-expandable');
+
     var btn = document.createElement('button');
     btn.className = 'memory-more';
+    btn.setAttribute('aria-label', 'Read more');
     btn.textContent = 'More';
-    btn.addEventListener('click', function () {
+    text.insertAdjacentElement('afterend', btn);
+
+    function expand(e) {
+      // Ignore clicks that originate inside the photo pile
+      if (e.target.closest('.memory-photo-pile')) return;
       text.classList.remove('memory-text-truncated');
       btn.remove();
-    });
-    text.insertAdjacentElement('afterend', btn);
+      card.classList.remove('is-expandable');
+      card.removeEventListener('click', expand);
+    }
+
+    card.addEventListener('click', expand);
   }
 
   function renderBatch() {

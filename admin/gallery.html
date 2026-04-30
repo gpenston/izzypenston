@@ -767,26 +767,25 @@
         html += '</div>';
       }
       grid.innerHTML = html;
-
-      // Caption input change listener
-      grid.addEventListener('input', function (e) {
-        if (e.target.classList.contains('caption-input')) countChanges();
-      });
-
-      // Delete button listener
-      grid.addEventListener('click', function (e) {
-        var delBtn = e.target.closest('.delete-btn');
-        if (!delBtn) return;
-        var idx = parseInt(delBtn.dataset.delIdx, 10);
-        var file = manifest[idx].file;
-        if (!confirm('Delete ' + file + '? This cannot be undone after saving.')) return;
-        manifest.splice(idx, 1);
-        renderGrid();
-        countChanges();
-      });
-
       initDragAndDrop();
     }
+
+    // Caption input change listener — attached once
+    grid.addEventListener('input', function (e) {
+      if (e.target.classList.contains('caption-input')) countChanges();
+    });
+
+    // Delete button listener — attached once
+    grid.addEventListener('click', function (e) {
+      var delBtn = e.target.closest('.delete-btn');
+      if (!delBtn) return;
+      var idx = parseInt(delBtn.dataset.delIdx, 10);
+      var file = manifest[idx].file;
+      if (!confirm('Delete ' + file + '? This cannot be undone after saving.')) return;
+      manifest.splice(idx, 1);
+      renderGrid();
+      countChanges();
+    });
 
     // ===== Drag and Drop =====
 
