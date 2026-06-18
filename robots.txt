@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /privacy.html
 
 Sitemap: https://izzypenston.com/sitemap.xml
