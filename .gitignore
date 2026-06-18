@@ -1,5 +1,6 @@
 .DS_Store
 .superpowers/
+.claude/settings.local.json
 worker/.wrangler/
 assets/photos/originals/
 assets/*.pxd
