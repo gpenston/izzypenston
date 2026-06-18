@@ -130,6 +130,13 @@
     var submitBtn = form.querySelector('button[type="submit"]');
     var data = new FormData(form);
 
+    // Validate Turnstile token \u2014 injected as a hidden input by the widget when solved
+    var turnstileToken = data.get('cf-turnstile-response');
+    if (!turnstileToken) {
+      alert('Please complete the security check before submitting.');
+      return;
+    }
+
     // Validate size before processing
     for (var fi = 0; fi < selectedFiles.length; fi++) {
       if (selectedFiles[fi].size > 20 * 1024 * 1024) {
@@ -170,15 +177,18 @@
               thanksState.style.display = 'none';
               modal.setAttribute('aria-labelledby', 'modal-title');
               form.reset();
+              if (window.turnstile) window.turnstile.reset();
               if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Share Memory'; }
             }, 300);
           }, 3000);
         } else {
+          if (window.turnstile) window.turnstile.reset();
           if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Share Memory'; }
           alert('Something went wrong. Please try again or email your memory to memories@izzypenston.com.');
         }
       })
       .catch(function () {
+        if (window.turnstile) window.turnstile.reset();
         if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Share Memory'; }
         alert('Something went wrong. Please try again or email your memory to memories@izzypenston.com.');
       });

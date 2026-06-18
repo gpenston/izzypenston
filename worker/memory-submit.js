@@ -9,8 +9,9 @@
  *   POST /api/admin/unpublish   — PIN-protected → removes a published memory
  *
  * Secrets (set in Cloudflare dashboard):
- *   GITHUB_TOKEN  — fine-grained PAT with Issues write on gpenston/izzypenston
- *   ADMIN_PIN     — shared PIN for the admin page (e.g. "8472")
+ *   GITHUB_TOKEN         — fine-grained PAT with Issues write on gpenston/izzypenston
+ *   ADMIN_PIN            — shared PIN for the admin page (e.g. "8472")
+ *   TURNSTILE_SECRET_KEY — from Cloudflare Turnstile dashboard (Widgets → your widget → Secret key)
  */
 
 const REPO_OWNER = 'gpenston';
@@ -167,8 +168,18 @@ function isSpam({ name, relation, message, website }) {
 
 // --- Handlers ---
 
+async function verifyTurnstile(token, env) {
+  const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ secret: env.TURNSTILE_SECRET_KEY, response: token })
+  });
+  const data = await res.json();
+  return data.success === true;
+}
+
 async function handleSubmit(request, env) {
-  let name, email, relation, message, website;
+  let name, email, relation, message, website, turnstileToken;
   let photoFiles = []; // Array of { arrayBuffer, type }
 
   const contentType = request.headers.get('Content-Type') || '';
@@ -179,6 +190,7 @@ async function handleSubmit(request, env) {
     relation = body.relation;
     message = body.message;
     website = body.website;
+    turnstileToken = body['cf-turnstile-response'];
   } else {
     const form = await request.formData();
     name = form.get('name');
@@ -186,6 +198,7 @@ async function handleSubmit(request, env) {
     relation = form.get('relation');
     message = form.get('message');
     website = form.get('website');
+    turnstileToken = form.get('cf-turnstile-response');
 
     // Collect up to 3 photos
     for (let i = 0; i < 3; i++) {
@@ -211,6 +224,11 @@ async function handleSubmit(request, env) {
   // Spam check — silently succeed so bots don't retry with different content
   if (isSpam({ name, relation, message, website })) {
     return json({ ok: true });
+  }
+
+  // Turnstile verification — reject invalid tokens with an error so real users can retry
+  if (!turnstileToken || !(await verifyTurnstile(turnstileToken, env))) {
+    return json({ ok: false, error: 'Security check failed. Please try again.' }, 400);
   }
 
   // Validate required fields

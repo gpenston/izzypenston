@@ -1,0 +1,9 @@
+# Copy to .dev.vars for local development (never commit .dev.vars)
+# Production values are set as secrets in the Cloudflare dashboard:
+#   wrangler secret put GITHUB_TOKEN
+#   wrangler secret put ADMIN_PIN
+#   wrangler secret put TURNSTILE_SECRET_KEY
+
+GITHUB_TOKEN=your_github_pat_here
+ADMIN_PIN=your_admin_pin_here
+TURNSTILE_SECRET_KEY=0x4AAAAAADm0Ep-HFZkeSmkMBOqmjuIxGec
